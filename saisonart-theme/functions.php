@@ -6,8 +6,18 @@
 /* --------------------------------------------------------------------------
    Engagement admin
    -------------------------------------------------------------------------- */
-require_once get_stylesheet_directory() . '/inc/engagement-admin.php';
-require_once get_stylesheet_directory() . '/inc/resend-handler.php';
+$sa_inc = get_stylesheet_directory() . '/inc/';
+if (file_exists($sa_inc . 'engagement-admin.php')) {
+    require_once $sa_inc . 'engagement-admin.php';
+}
+if (file_exists($sa_inc . 'resend-handler.php')) {
+    require_once $sa_inc . 'resend-handler.php';
+}
+
+/* Debug: confirm child theme is active (remove after verification) */
+add_action('wp_footer', function() {
+    echo '<!-- SA-CHILD-ACTIVE -->';
+});
 
 /* --------------------------------------------------------------------------
    Enqueue styles & scripts
