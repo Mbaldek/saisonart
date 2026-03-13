@@ -794,6 +794,63 @@ body.woocommerce-account .entry-content {
 }
 
 /* ── Empty cart ────────────────────────── */
+.sa-cart-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 80px 20px 100px;
+  min-height: 40vh;
+}
+.sa-cart-empty-icon {
+  stroke: rgba(255,255,255,.15);
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  margin-bottom: 28px;
+}
+.sa-cart-empty-title {
+  font-family: var(--sa-font-h);
+  font-size: clamp(1.3rem, 3vw, 1.8rem);
+  font-weight: 600;
+  color: rgba(255,255,255,.7);
+  margin: 0 0 10px;
+}
+.sa-cart-empty-sub {
+  font-family: var(--sa-font-b);
+  font-size: 14px;
+  color: rgba(255,255,255,.35);
+  margin: 0 0 32px;
+  max-width: 340px;
+}
+.sa-cart-empty-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--sa-accent);
+  color: #fff;
+  border: none;
+  border-radius: 999px;
+  padding: 14px 32px;
+  font-family: var(--sa-font-b);
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background .25s, transform .2s;
+}
+.sa-cart-empty-btn:hover {
+  background: var(--sa-accent2);
+  transform: translateY(-1px);
+  color: #fff;
+}
+.sa-cart-empty-btn svg {
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2;
+}
+/* Legacy WC fallback */
 .woocommerce-cart .cart-empty {
   text-align: center;
   font-family: var(--sa-font-h);

@@ -680,6 +680,342 @@ function saisonart_dequeue_wc_blocks() {
 }
 
 /* --------------------------------------------------------------------------
+   Product page V2 test — add ?v2 to any product URL to use single-product-v2.php
+   -------------------------------------------------------------------------- */
+add_filter('template_include', function ($template) {
+    if (is_product() && isset($_GET['v2'])) {
+        $v2 = get_stylesheet_directory() . '/woocommerce/single-product-v2.php';
+        if (file_exists($v2)) {
+            return $v2;
+        }
+    }
+    return $template;
+}, 99);
+
+/* --------------------------------------------------------------------------
+   Product V2 — CSS enqueue
+   -------------------------------------------------------------------------- */
+add_action('wp_enqueue_scripts', function () {
+    if (is_product() && isset($_GET['v2'])) {
+        wp_enqueue_style(
+            'sa-product-v2',
+            get_stylesheet_directory_uri() . '/assets/css/product-v2.css',
+            array(),
+            filemtime(get_stylesheet_directory() . '/assets/css/product-v2.css')
+        );
+    }
+});
+
+/* --------------------------------------------------------------------------
+   Product V2 — WooCommerce hooks (only active with ?v2)
+   -------------------------------------------------------------------------- */
+add_action('init', function () {
+    if (!isset($_GET['v2'])) return;
+
+    // ── Reorder summary hooks ──
+    remove_action('woocommerce_single_product_summary', 'woocommerce_template_single_rating', 10);
+    remove_action('woocommerce_single_product_summary', 'woocommerce_template_single_excerpt', 20);
+    remove_action('woocommerce_single_product_summary', 'woocommerce_template_single_sharing', 50);
+
+    add_action('woocommerce_single_product_summary', 'sav2_sidebar_eyebrow', 3);
+    add_action('woocommerce_single_product_summary', 'sav2_sidebar_meta_chips', 15);
+    add_action('woocommerce_single_product_summary', 'sav2_sidebar_price_info', 21);
+    add_action('woocommerce_single_product_summary', 'sav2_sidebar_trust', 35);
+
+    add_action('woocommerce_after_add_to_cart_button', 'sav2_contact_button');
+    add_action('woocommerce_before_single_product_summary', 'sav2_gallery_badge', 5);
+    add_action('woocommerce_after_single_product_summary', 'sav2_custom_sections', 5);
+    add_action('woocommerce_after_single_product', 'sav2_mobile_bar', 10);
+
+    // Utilities
+    add_filter('woocommerce_product_description_heading', '__return_empty_string');
+    add_filter('woocommerce_product_additional_information_heading', '__return_empty_string');
+    add_filter('woocommerce_quantity_input_args', function ($args, $product) {
+        if (is_product() && $product && $product->get_stock_quantity() <= 1) {
+            $args['min_value'] = 1;
+            $args['max_value'] = 1;
+            $args['input_value'] = 1;
+        }
+        return $args;
+    }, 10, 2);
+
+    // Fix caption shortcodes
+    add_filter('the_content', 'sav2_fix_captions', 1);
+    add_filter('woocommerce_short_description', 'sav2_fix_captions', 1);
+});
+
+/* ── V2 Hook functions ─────────────────────────────────────── */
+
+function sav2_fix_captions($content) {
+    if (!is_singular('product') && !doing_filter('woocommerce_short_description')) return $content;
+    if (strpos($content, '[caption') !== false) {
+        $content = do_shortcode($content);
+    }
+    return preg_replace('/\[caption[^\]]*\](.*?)\[\/caption\]/s', '$1', $content);
+}
+
+/* Eyebrow — catégorie chip + badge certifié */
+function sav2_sidebar_eyebrow() {
+    if (!is_product()) return;
+    $terms = get_the_terms(get_the_ID(), 'product_cat');
+    $category = (!empty($terms) && !is_wp_error($terms)) ? esc_html($terms[0]->name) : 'Œuvre';
+    $certified = get_post_meta(get_the_ID(), '_sa_certified', true);
+    ?>
+    <div class="sa-v2-eyebrow">
+        <span class="sa-v2-chip sa-v2-chip-accent"><?php echo $category; ?></span>
+        <?php if ($certified) : ?>
+            <span class="sa-v2-chip" style="gap:5px;">
+                <svg viewBox="0 0 24 24" width="12" height="12"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                Œuvre certifiée
+            </span>
+        <?php endif; ?>
+    </div>
+    <?php
+}
+
+/* Meta chips — technique, dimensions, période, école, état */
+function sav2_sidebar_meta_chips() {
+    if (!is_product()) return;
+    $product = wc_get_product(get_the_ID());
+    if (!$product) return;
+
+    $icon_map = array(
+        'technique'  => '<svg viewBox="0 0 24 24"><circle cx="13.5" cy="6.5" r="2.5"/><circle cx="17" cy="12" r="1.5"/><circle cx="8" cy="8" r="2"/><circle cx="6" cy="14" r="1.5"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.9 0 1.5-.7 1.5-1.5 0-.4-.1-.7-.4-1-.3-.3-.4-.6-.4-1 0-.8.7-1.5 1.5-1.5H16c3.3 0 6-2.7 6-6 0-5.5-4.5-9-10-9z"/></svg>',
+        'dimensions' => '<svg viewBox="0 0 24 24"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>',
+        'periode'    => '<svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>',
+        'ecole'      => '<svg viewBox="0 0 24 24"><line x1="6" y1="20" x2="6" y2="9"/><line x1="10" y1="20" x2="10" y2="9"/><line x1="14" y1="20" x2="14" y2="9"/><line x1="18" y1="20" x2="18" y2="9"/><path d="M3 20h18"/><path d="M2 9h20l-2-4H4L2 9z"/></svg>',
+        'etat'       => '<svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="1"/><rect x="7" y="7" width="10" height="10" rx="1"/></svg>',
+    );
+
+    $chips = array();
+
+    // Source 1: WooCommerce attributes
+    $attributes = $product->get_attributes();
+    foreach ($attributes as $slug => $attribute) {
+        $slug_clean = str_replace('pa_', '', $slug);
+        if (!isset($icon_map[$slug_clean])) continue;
+        $values = wc_get_product_terms(get_the_ID(), $slug, array('fields' => 'names'));
+        if (empty($values)) {
+            $values = $attribute->get_options();
+        }
+        if (!empty($values)) {
+            $chips[] = array(
+                'icon'  => $icon_map[$slug_clean],
+                'value' => implode(', ', array_map('esc_html', (array)$values)),
+            );
+        }
+    }
+
+    // Source 2: Custom meta fallback
+    if (empty($chips)) {
+        $meta_map = array(
+            '_sa_technique'  => 'technique',
+            '_sa_dimensions' => 'dimensions',
+            '_sa_periode'    => 'periode',
+            '_sa_ecole'      => 'ecole',
+            '_sa_etat'       => 'etat',
+        );
+        foreach ($meta_map as $key => $slug) {
+            $val = get_post_meta(get_the_ID(), $key, true);
+            if ($val) {
+                $chips[] = array('icon' => $icon_map[$slug], 'value' => esc_html($val));
+            }
+        }
+    }
+
+    if (empty($chips)) return;
+
+    echo '<div class="sa-v2-meta-chips">';
+    foreach ($chips as $chip) {
+        printf('<span class="sa-v2-chip">%s<span>%s</span></span>', $chip['icon'], $chip['value']);
+    }
+    echo '</div>';
+}
+
+/* Sous-texte prix */
+function sav2_sidebar_price_info() {
+    if (!is_product()) return;
+    echo '<p class="sa-v2-price-info">TVA incluse &middot; Livraison offerte en France m&eacute;tropolitaine</p>';
+}
+
+/* Bouton contact + badges paiement */
+function sav2_contact_button() {
+    if (!is_product()) return;
+    $contact_url = esc_url(home_url('/conseil/'));
+    $contact_url = add_query_arg('sujet', urlencode('Renseignement : ' . get_the_title()), $contact_url);
+    ?>
+    <a href="<?php echo esc_url($contact_url); ?>" class="sa-v2-contact-btn">
+        <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        Contacter pour plus d'infos
+    </a>
+    <div class="sa-v2-payment-row">
+        <span class="sa-v2-pay-badge">
+            <svg viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+            CB / Visa
+        </span>
+        <span class="sa-v2-pay-badge">
+            <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            3&times; sans frais
+        </span>
+    </div>
+    <?php
+}
+
+/* Trust badges sidebar */
+function sav2_sidebar_trust() {
+    if (!is_product()) return;
+    ?>
+    <ul class="sa-v2-trust-list">
+        <li>
+            <svg viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+            Livraison offerte &middot; Emballage mus&eacute;al
+        </li>
+        <li>
+            <svg viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+            Retour 14 jours &middot; Satisfait ou rembours&eacute;
+        </li>
+        <li>
+            <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+            Certificat d'authenticit&eacute; inclus
+        </li>
+    </ul>
+    <?php
+}
+
+/* Badge certifié sur la galerie */
+function sav2_gallery_badge() {
+    if (!is_product()) return;
+    $certified = get_post_meta(get_the_ID(), '_sa_certified', true);
+    if (!$certified) return;
+    ?>
+    <div class="sa-gallery-badge">
+        <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        Œuvre certifi&eacute;e
+    </div>
+    <?php
+}
+
+/* Sections sous la galerie : artiste + certificat + garanties */
+function sav2_custom_sections() {
+    if (!is_product()) return;
+
+    $product_id   = get_the_ID();
+    $artist_name  = get_post_meta($product_id, '_sa_artiste_nom', true);
+    $artist_dates = get_post_meta($product_id, '_sa_artiste_dates', true);
+    $artist_bio   = get_post_meta($product_id, '_sa_artiste_bio', true);
+
+    // Fallback: try WC attributes for artist name
+    if (!$artist_name) {
+        $product = wc_get_product($product_id);
+        if ($product) {
+            $artist_name = $product->get_attribute('artiste') ?: $product->get_attribute('artist');
+        }
+    }
+
+    $initials = '';
+    if ($artist_name) {
+        foreach (explode(' ', $artist_name) as $word) {
+            $initials .= mb_strtoupper(mb_substr($word, 0, 1));
+        }
+        $initials = mb_substr($initials, 0, 2);
+    }
+
+    echo '<div class="sa-product-sections">';
+
+    // ─ Artiste ─
+    if ($artist_name) :
+    ?>
+        <div class="sa-v2-section-label" style="margin-top:40px;">L'artiste</div>
+        <div class="sa-v2-artist-block">
+            <div class="sa-v2-artist-avatar"><?php echo esc_html($initials ?: '?'); ?></div>
+            <div class="sa-v2-artist-info">
+                <h3><?php echo esc_html($artist_name); ?></h3>
+                <?php if ($artist_dates) : ?>
+                    <div class="sa-v2-artist-dates"><?php echo esc_html($artist_dates); ?></div>
+                <?php endif; ?>
+                <?php if ($artist_bio) : ?>
+                    <p><?php echo wp_kses_post($artist_bio); ?></p>
+                <?php endif; ?>
+                <?php
+                $artist_cat = get_term_by('name', $artist_name, 'product_cat');
+                if (!$artist_cat) {
+                    $artist_tag = get_term_by('name', $artist_name, 'product_tag');
+                }
+                $artist_url = '';
+                if (!empty($artist_cat) && !is_wp_error($artist_cat)) {
+                    $artist_url = get_term_link($artist_cat);
+                } elseif (!empty($artist_tag) && !is_wp_error($artist_tag)) {
+                    $artist_url = get_term_link($artist_tag);
+                }
+                if ($artist_url && !is_wp_error($artist_url)) : ?>
+                    <a href="<?php echo esc_url($artist_url); ?>" class="sa-v2-artist-link">
+                        Voir toutes ses œuvres &rarr;
+                    </a>
+                <?php endif; ?>
+            </div>
+        </div>
+    <?php endif;
+
+    // ─ Certificat + Garanties ─
+    ?>
+    <div class="sa-v2-section-label" style="margin-top:<?php echo $artist_name ? '8px' : '40px'; ?>;">Garanties</div>
+
+    <div class="sa-v2-cert-block">
+        <div class="sa-v2-cert-icon">
+            <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        </div>
+        <div class="sa-v2-cert-text">
+            <strong>Certificat d'authenticit&eacute; inclus</strong>
+            <span>Expertise r&eacute;alis&eacute;e par un commissaire-priseur agr&eacute;&eacute;. Document joint &agrave; l'&oelig;uvre &agrave; la livraison.</span>
+        </div>
+    </div>
+
+    <ul class="sa-v2-guarantees">
+        <li>
+            <svg viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+            Livraison offerte en France m&eacute;tropolitaine &middot; Emballage mus&eacute;al
+        </li>
+        <li>
+            <svg viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+            Retour accept&eacute; sous 14 jours &mdash; Garantie satisfait ou rembours&eacute;
+        </li>
+        <li>
+            <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            Conseil personnalis&eacute; disponible &mdash; R&eacute;ponse en moins de 4h
+        </li>
+    </ul>
+    <?php
+    echo '</div>';
+}
+
+/* Barre sticky mobile */
+function sav2_mobile_bar() {
+    if (!is_product()) return;
+
+    global $product;
+    if (!$product) $product = wc_get_product(get_the_ID());
+    if (!$product) return;
+
+    $price       = $product->get_price_html();
+    $cart_url    = $product->add_to_cart_url();
+    $contact_url = esc_url(home_url('/conseil/'));
+    ?>
+    <div class="sa-v2-mobile-bar">
+        <div class="sa-v2-mobile-price"><?php echo wp_kses_post($price); ?></div>
+        <a href="<?php echo esc_url($cart_url); ?>"
+           class="sa-v2-mobile-cta"
+           data-product_id="<?php echo esc_attr(get_the_ID()); ?>"
+           data-quantity="1">
+            Acheter
+        </a>
+        <a href="<?php echo esc_url($contact_url); ?>" class="sa-v2-mobile-contact">
+            Infos
+        </a>
+    </div>
+    <?php
+}
+
+/* --------------------------------------------------------------------------
    Sales funnel: redirect to cart after add-to-cart
    -------------------------------------------------------------------------- */
 add_filter('woocommerce_add_to_cart_redirect', function () {
