@@ -22,16 +22,13 @@
    1. BUG FIXES — Éléments mal positionnés sur la page panier
 ════════════════════════════════════════════════════════════ */
 
-/* Fix "Modifier" / .showcoupon flottant hors du layout */
+/* Fix "Modifier" / .showcoupon — masquer complètement */
 .woocommerce-cart .showcoupon {
-  position: static !important;
-  display: inline !important;
-  float: none !important;
-  left: auto !important;
-  bottom: auto !important;
+  display: none !important;
 }
 
-/* Fix icône ⓘ orpheline (notice vide) */
+/* Fix bandeau "Votre panier est actuellement vide" + icône ⓘ orpheline */
+.woocommerce-cart .woocommerce-info,
 .woocommerce-cart .woocommerce-info:empty,
 .woocommerce-cart ul.woocommerce-error:empty,
 .woocommerce-cart .woocommerce-message:empty {
