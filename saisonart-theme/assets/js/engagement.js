@@ -128,14 +128,17 @@
         }, firstDelay);
       }
 
-      // Toast 2: Social proof on scroll past .sa-selection
+      // Toast 2: Social proof on scroll past .sa-selection (homepage-aware)
       var selSection = document.querySelector('.sa-selection');
       if (selSection && shown.indexOf('social') === -1) {
         var obs = new IntersectionObserver(function (entries) {
           if (!entries[0].isIntersecting) {
             var x = Math.floor(Math.random() * 10) + 3;
-            var msg = (C.toast_msg_2 || '{x} personnes consultent cette œuvre').replace('{x}', x);
-            self.add({ type: 'social', icon: 'users', title: 'Populaire', text: msg });
+            var isHome = document.body.classList.contains('home');
+            var msg = isHome
+              ? (x + ' visiteurs parcourent la galerie en ce moment')
+              : (C.toast_msg_2 || '{x} personnes consultent cette œuvre').replace('{x}', x);
+            self.add({ type: 'social', icon: 'users', title: isHome ? 'En ce moment' : 'Populaire', text: msg });
             obs.disconnect();
           }
         }, { threshold: 0 });

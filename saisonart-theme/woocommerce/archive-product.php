@@ -1,48 +1,98 @@
 <?php
 /**
- * The Template for displaying product archives.
- *
- * Override this template by copying it to saisonart-theme/woocommerce/archive-product.php
- *
- * @see https://woocommerce.com/document/template-structure/
+ * SaisonArt — Boutique (Shop Archive) page.
+ * Dark theme, hero + filter bar + custom product grid.
  */
-
 defined('ABSPATH') || exit;
-
 get_header('shop');
+
+// Get product categories for filter chips
+$product_cats = get_terms(array(
+    'taxonomy'   => 'product_cat',
+    'hide_empty' => true,
+    'exclude'    => array(get_option('default_product_cat')), // exclude "Uncategorized"
+));
+
+// Count products
+$product_count = wp_count_posts('product');
+$total_count   = $product_count->publish ?? 0;
+
+// Current filter
+$current_cat = isset($_GET['product_cat']) ? sanitize_text_field($_GET['product_cat']) : '';
 ?>
-<nav class="sa-breadcrumbs" aria-label="Fil d'Ariane">
-    <?php woocommerce_breadcrumb(array(
-        'delimiter'   => ' <span class="sa-bc-sep">&rsaquo;</span> ',
-        'wrap_before' => '<div class="sa-bc-inner">',
-        'wrap_after'  => '</div>',
-        'before'      => '<span>',
-        'after'       => '</span>',
-        'home'        => 'Accueil',
-    )); ?>
+
+<!-- Breadcrumb -->
+<nav class="sa-bc" aria-label="Fil d'Ariane">
+  <div class="sa-bc-inner">
+    <a href="<?php echo esc_url(home_url('/')); ?>">Accueil</a>
+    <span class="sa-bc-sep">&rsaquo;</span>
+    <span>Boutique</span>
+  </div>
 </nav>
-<?php
-do_action('woocommerce_before_main_content');
 
-if (woocommerce_product_loop()) {
-    do_action('woocommerce_before_shop_loop');
-    woocommerce_product_loop_start();
+<!-- Hero -->
+<section class="sa-shop-hero">
+  <div class="sa-shop-hero-inner">
+    <div class="sa-shop-eyebrow">Galerie en ligne</div>
+    <h1 class="sa-shop-h1">&OElig;uvres originales<br><em>XIXe &amp; XXe si&egrave;cle</em></h1>
+    <p class="sa-shop-desc">Peintures de ma&icirc;tres de l'&eacute;cole fran&ccedil;aise &mdash; chaque tableau expertis&eacute;, certifi&eacute;, livr&eacute; avec son certificat d'authenticit&eacute;.</p>
+    <div class="sa-shop-meta">
+      <span><strong><?php echo esc_html($total_count); ?></strong> &oelig;uvres disponibles</span>
+      <div class="sa-shop-meta-sep"></div>
+      <span>Livraison <strong>48h</strong> assur&eacute;e</span>
+      <div class="sa-shop-meta-sep"></div>
+      <span>Retour <strong>14j</strong> gratuit</span>
+    </div>
+  </div>
+</section>
 
-    if (wc_get_loop_prop('total')) {
-        while (have_posts()) {
-            the_post();
-            do_action('woocommerce_shop_loop');
-            wc_get_template_part('content', 'product');
-        }
-    }
+<!-- Toolbar -->
+<div class="sa-toolbar">
+  <div class="sa-filter-group">
+    <a href="<?php echo esc_url(get_permalink(wc_get_page_id('shop'))); ?>"
+       class="sa-filter-chip<?php echo empty($current_cat) ? ' active' : ''; ?>">Tous</a>
+    <?php if (!empty($product_cats) && !is_wp_error($product_cats)) :
+      foreach ($product_cats as $cat) : ?>
+        <a href="<?php echo esc_url(get_term_link($cat)); ?>"
+           class="sa-filter-chip<?php echo ($current_cat === $cat->slug) ? ' active' : ''; ?>">
+          <?php echo esc_html($cat->name); ?>
+        </a>
+      <?php endforeach;
+    endif; ?>
+  </div>
+  <div class="sa-toolbar-right">
+    <span class="sa-result-count"><?php echo esc_html($total_count); ?> r&eacute;sultats</span>
+    <?php woocommerce_catalog_ordering(); ?>
+  </div>
+</div>
 
-    woocommerce_product_loop_end();
-    do_action('woocommerce_after_shop_loop');
-} else {
-    do_action('woocommerce_no_products_found');
-}
+<!-- Product grid -->
+<div class="sa-grid-wrap">
+  <?php
+  if (woocommerce_product_loop()) {
+      woocommerce_product_loop_start();
 
-do_action('woocommerce_after_main_content');
-do_action('woocommerce_sidebar');
+      if (wc_get_loop_prop('total')) {
+          while (have_posts()) {
+              the_post();
+              wc_get_template_part('content', 'product');
+          }
+      }
 
-get_footer('shop');
+      woocommerce_product_loop_end();
+      ?>
+      <div class="sa-pagination">
+        <?php woocommerce_pagination(); ?>
+      </div>
+      <?php
+  } else {
+      ?>
+      <div class="sa-shop-empty">
+        <p>Aucune &oelig;uvre pour le moment. Revenez bient&ocirc;t&nbsp;!</p>
+      </div>
+      <?php
+  }
+  ?>
+</div>
+
+<?php get_footer('shop'); ?>

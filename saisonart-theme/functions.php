@@ -31,6 +31,18 @@ function saisonart_enqueue_styles() {
         wp_enqueue_style('saisonart-frontpage', get_stylesheet_directory_uri() . '/assets/css/front-page.css', array('saisonart-main'), $version);
     }
 
+    // Conseil page styles
+    if (is_page_template('page-conseil.php') || is_page('conseil')) {
+        wp_enqueue_style('saisonart-conseil', get_stylesheet_directory_uri() . '/assets/css/conseil.css', array('saisonart-main'), $version);
+        wp_enqueue_script('saisonart-conseil', get_stylesheet_directory_uri() . '/assets/js/conseil.js', array(), $version, true);
+    }
+
+    // Boutique & product page styles
+    if (is_shop() || is_product_category() || is_product_tag() || is_product()) {
+        wp_enqueue_style('saisonart-boutique', get_stylesheet_directory_uri() . '/assets/css/boutique.css', array('saisonart-main'), $version);
+        wp_enqueue_script('saisonart-boutique', get_stylesheet_directory_uri() . '/assets/js/boutique.js', array(), $version, true);
+    }
+
     // Engagement styles
     wp_enqueue_style('saisonart-engagement', get_stylesheet_directory_uri() . '/assets/css/engagement.css', array('saisonart-main'), $version);
 
@@ -46,6 +58,11 @@ function saisonart_enqueue_styles() {
     unset($config['resend_api_key'], $config['resend_from'], $config['resend_notify_email']);
     wp_localize_script('saisonart-engagement', 'saEngageConfig', $config);
 }
+
+/* --------------------------------------------------------------------------
+   Remove WooCommerce sidebar on shop pages (full-width layout)
+   -------------------------------------------------------------------------- */
+remove_action('woocommerce_sidebar', 'woocommerce_get_sidebar', 10);
 
 /* --------------------------------------------------------------------------
    Theme setup
@@ -232,10 +249,6 @@ function saisonart_jsonld() {
             'height' => 50,
         ),
         'description' => 'Galerie d\'art en ligne spécialisée dans les peintures originales de maîtres français des XIXe et XXe siècles.',
-        'sameAs'      => array(
-            'https://www.instagram.com/saisonart/',
-            'https://www.facebook.com/saisonart/',
-        ),
         'contactPoint' => array(
             '@type'             => 'ContactPoint',
             'contactType'       => 'customer service',

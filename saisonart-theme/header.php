@@ -50,8 +50,9 @@ if (!empty($sa_s['announce_enabled']) && $sa_s['announce_enabled'] !== '0') :
   <nav class="sa-nav" aria-label="Navigation principale">
     <?php
     $menu_items = array(
-        '/boutique/' => 'Boutique',
-        '/news/'     => 'Magazine',
+        '/boutique/'   => 'Œuvres',
+        '/conseil/'    => 'Conseil',
+        '/news/'       => 'Magazine',
         '/contact-us/' => 'Contact',
     );
     foreach ($menu_items as $path => $label) {
@@ -84,7 +85,8 @@ if (!empty($sa_s['announce_enabled']) && $sa_s['announce_enabled'] !== '0') :
 
 <!-- Mobile menu -->
 <nav class="sa-header-mobile-menu" aria-label="Menu mobile">
-  <a href="<?php echo esc_url(home_url('/boutique/')); ?>">Boutique</a>
+  <a href="<?php echo esc_url(home_url('/boutique/')); ?>">Œuvres</a>
+  <a href="<?php echo esc_url(home_url('/conseil/')); ?>">Conseil</a>
   <a href="<?php echo esc_url(home_url('/news/')); ?>">Magazine</a>
   <a href="<?php echo esc_url(home_url('/contact-us/')); ?>">Contact</a>
   <a href="<?php echo esc_url(wc_get_cart_url()); ?>">Panier</a>

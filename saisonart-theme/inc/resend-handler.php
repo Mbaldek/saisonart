@@ -52,10 +52,13 @@ function sa_capture_email() {
 
     // Notify admin of new capture
     $source_labels = array(
-        'quiz'      => 'Quiz de style',
-        'wishlist'  => 'Wishlist / Coeurs',
-        'exit'      => 'Exit-intent popup',
-        'newsletter'=> 'Newsletter',
+        'quiz'                    => 'Quiz de style',
+        'wishlist'                => 'Wishlist / Coeurs',
+        'exit'                    => 'Exit-intent popup',
+        'newsletter'              => 'Newsletter',
+        'conseil-recherche'       => 'Conseil — Recherche d\'œuvre',
+        'conseil-identification'  => 'Conseil — Identification tableau',
+        'conseil-rdv'             => 'Conseil — Demande de RDV',
     );
     $source_label = isset($source_labels[$source]) ? $source_labels[$source] : $source;
 
@@ -140,10 +143,13 @@ function sa_store_contact($email, $source, $data) {
    -------------------------------------------------------------------------- */
 function sa_get_welcome_subject($source) {
     $subjects = array(
-        'quiz'       => 'Vos recommandations personnalisées — SaisonArt',
-        'wishlist'   => 'Vos coups de cœur sauvegardés — SaisonArt',
-        'exit'       => 'Votre code promo exclusif — SaisonArt',
-        'newsletter' => 'Bienvenue dans l\'atelier — SaisonArt',
+        'quiz'                   => 'Vos recommandations personnalisées — SaisonArt',
+        'wishlist'               => 'Vos coups de cœur sauvegardés — SaisonArt',
+        'exit'                   => 'Votre code promo exclusif — SaisonArt',
+        'newsletter'             => 'Bienvenue dans l\'atelier — SaisonArt',
+        'conseil-recherche'      => 'Votre demande de recherche — SaisonArt',
+        'conseil-identification' => 'Votre demande d\'identification — SaisonArt',
+        'conseil-rdv'            => 'Votre demande de rendez-vous — SaisonArt',
     );
     return isset($subjects[$source]) ? $subjects[$source] : 'Bienvenue — SaisonArt';
 }
@@ -190,6 +196,27 @@ function sa_get_welcome_html($email, $source, $data, $settings) {
                   . '</div>'
                   . '<p style="font-size:12px;color:#999;">Valable 48h. Une seule utilisation.</p>'
                   . '<p style="text-align:center;padding:16px 0;"><a href="' . esc_url($shop_url) . '" style="' . $btn . '">Utiliser mon code</a></p>';
+            break;
+
+        case 'conseil-recherche':
+            $body = '<h2 style="font-family:\'Playfair Display\',Georgia,serif;color:#2C3D35;font-size:24px;">Votre demande est bien reçue</h2>'
+                  . '<p>Nous avons pris note de ce que vous recherchez et allons parcourir notre sélection pour trouver des œuvres qui correspondent à vos critères.</p>'
+                  . '<p>Un membre de la galerie vous recontactera sous 48h avec une sélection personnalisée.</p>'
+                  . '<p style="text-align:center;padding:16px 0;"><a href="' . esc_url($shop_url) . '" style="' . $btn . '">Explorer la boutique en attendant</a></p>';
+            break;
+
+        case 'conseil-identification':
+            $body = '<h2 style="font-family:\'Playfair Display\',Georgia,serif;color:#2C3D35;font-size:24px;">Votre demande d\'identification est enregistrée</h2>'
+                  . '<p>Nous avons bien reçu les informations concernant votre tableau. Notre équipe va l\'examiner avec attention.</p>'
+                  . '<p>Nous reviendrons vers vous avec nos observations — généralement sous 48 à 72 heures.</p>'
+                  . '<p style="font-size:12px;color:#999;">Ce service est gratuit et sans engagement.</p>';
+            break;
+
+        case 'conseil-rdv':
+            $body = '<h2 style="font-family:\'Playfair Display\',Georgia,serif;color:#2C3D35;font-size:24px;">Votre demande de rendez-vous</h2>'
+                  . '<p>Nous avons bien reçu votre demande. Un membre de la galerie vous confirmera un créneau par email dans les prochaines 24 heures.</p>'
+                  . '<p>L\'échange dure environ 20 minutes et est entièrement gratuit.</p>'
+                  . '<p style="text-align:center;padding:16px 0;"><a href="' . esc_url($shop_url) . '" style="' . $btn . '">Découvrir nos œuvres</a></p>';
             break;
 
         case 'newsletter':

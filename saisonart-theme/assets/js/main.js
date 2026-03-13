@@ -217,10 +217,31 @@
     });
   }
 
+  /* ── Hero burger (homepage) ─────────────────────────────── */
+  function initHeroBurger() {
+    var burger = document.querySelector('.sa-hero-burger');
+    var menu = document.querySelector('.sa-hero-menu');
+    if (!burger || !menu) return;
+
+    burger.addEventListener('click', function (e) {
+      e.stopPropagation();
+      burger.classList.toggle('is-open');
+      menu.classList.toggle('is-open');
+    });
+
+    document.addEventListener('click', function (e) {
+      if (!e.target.closest('.sa-hero-nav')) {
+        burger.classList.remove('is-open');
+        menu.classList.remove('is-open');
+      }
+    });
+  }
+
   /* ── Init ────────────────────────────────────────────────── */
   $(document).ready(function () {
     initHeaderScroll();
     initBurger();
+    initHeroBurger();
     initScrollReveal();
     initStackCarousel();
     initCountUp();

@@ -9,6 +9,17 @@ get_header(); ?>
 
 <!-- ═══════ 1. HERO — Vidéo Background ═══════ -->
 <section class="sa-hero" id="hero">
+  <!-- Hero burger nav -->
+  <div class="sa-hero-nav">
+    <button class="sa-hero-burger" aria-label="Menu"><span></span><span></span><span></span></button>
+    <nav class="sa-hero-menu">
+      <a href="<?php echo esc_url(home_url('/')); ?>">Accueil</a>
+      <a href="<?php echo esc_url(home_url('/boutique/')); ?>">Œuvres</a>
+      <a href="<?php echo esc_url(home_url('/conseil/')); ?>">Conseil</a>
+      <a href="<?php echo esc_url(home_url('/news/')); ?>">Magazine</a>
+    </nav>
+  </div>
+
   <!-- Vidéo background blurred -->
   <div class="sa-hero-video">
     <video autoplay muted loop playsinline preload="none">
@@ -33,8 +44,8 @@ get_header(); ?>
 
     <div class="sa-hero-chips">
       <a href="<?php echo esc_url(home_url('/boutique/')); ?>" class="sa-hero-chip primary">Découvrir la boutique</a>
+      <a href="<?php echo esc_url(home_url('/conseil/')); ?>" class="sa-hero-chip">Conseil expert</a>
       <a href="<?php echo esc_url(home_url('/news/')); ?>" class="sa-hero-chip">Le Magazine</a>
-      <a href="<?php echo esc_url(home_url('/contact-us/')); ?>" class="sa-hero-chip">Contact</a>
     </div>
 
     <div class="sa-hero-meta">
