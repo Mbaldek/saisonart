@@ -224,24 +224,30 @@
     });
   }
 
-  /* ── Hero burger (homepage) ─────────────────────────────── */
+  /* ── Hero burger (homepage) — opens on hover ──────────────── */
   function initHeroBurger() {
+    var nav = document.querySelector('.sa-hero-nav');
     var burger = document.querySelector('.sa-hero-burger');
     var menu = document.querySelector('.sa-hero-menu');
-    if (!burger || !menu) return;
+    if (!nav || !burger || !menu) return;
 
-    burger.addEventListener('click', function (e) {
-      e.stopPropagation();
-      burger.classList.toggle('is-open');
-      menu.classList.toggle('is-open');
-    });
+    var closeTimer = null;
 
-    document.addEventListener('click', function (e) {
-      if (!e.target.closest('.sa-hero-nav')) {
+    function openMenu() {
+      clearTimeout(closeTimer);
+      burger.classList.add('is-open');
+      menu.classList.add('is-open');
+    }
+
+    function scheduleClose() {
+      closeTimer = setTimeout(function () {
         burger.classList.remove('is-open');
         menu.classList.remove('is-open');
-      }
-    });
+      }, 250);
+    }
+
+    nav.addEventListener('mouseenter', openMenu);
+    nav.addEventListener('mouseleave', scheduleClose);
   }
 
   /* ── Init ────────────────────────────────────────────────── */

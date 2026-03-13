@@ -244,6 +244,22 @@ body.tax-product_cat .woocommerce-result-count { display: none !important; }
 }
 
 /* ── Product Card ────────────────────────────────────────── */
+/* Kill ALL Storefront li.product defaults */
+.woocommerce ul.products li.product,
+.woocommerce-page ul.products li.product,
+ul.products li.product {
+  background: var(--sa-darker) !important;
+  border: 1px solid var(--sa-border) !important;
+  overflow: hidden !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  float: none !important;
+  width: auto !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  text-align: left !important;
+  list-style: none !important;
+}
 .sa-pcard {
   background: var(--sa-darker) !important;
   border: 1px solid var(--sa-border) !important;
@@ -403,13 +419,39 @@ body.tax-product_cat .woocommerce-result-count { display: none !important; }
   cursor: default;
 }
 
-/* Hide default WooCommerce elements on cards */
+/* Hide ALL default WooCommerce / Storefront elements on cards */
 .sa-pcard .woocommerce-loop-product__title,
 .sa-pcard .price,
 .sa-pcard .button,
 .sa-pcard .star-rating,
-.sa-pcard .onsale {
+.sa-pcard .onsale,
+.sa-pcard .added_to_cart,
+.sa-pcard .woocommerce-loop-product__link,
+ul.products li.product .woocommerce-loop-product__title,
+ul.products li.product .price,
+ul.products li.product .button,
+ul.products li.product .star-rating,
+ul.products li.product .onsale,
+ul.products li.product > .added_to_cart,
+ul.products li.product > a > img {
   display: none !important;
+}
+
+/* Make sure our custom card link is the only visible content */
+.sa-pcard > .sa-pcard-link {
+  display: block !important;
+}
+
+/* Override Storefront's product image sizing */
+.sa-pcard img,
+ul.products li.product .sa-pcard-img img {
+  position: absolute !important;
+  inset: 0;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  margin: 0 !important;
+  padding: 0 !important;
 }
 
 /* ── Pagination ──────────────────────────────────────────── */
@@ -887,4 +929,12 @@ body.post-type-archive-product #content,
 body.tax-product_cat #content,
 body.single-product #content {
   padding-top: 0 !important;
+  background: transparent !important;
+}
+
+/* Kill Storefront page-level backgrounds */
+body.post-type-archive-product #page,
+body.tax-product_cat #page,
+body.single-product #page {
+  background: transparent !important;
 }

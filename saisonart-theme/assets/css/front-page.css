@@ -243,9 +243,9 @@ body.home button:focus-visible {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 5px;
-  width: 48px;
-  height: 48px;
+  gap: 4px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   border: 1.5px solid rgba(255,255,255,.25);
   background: rgba(255,255,255,.12);
@@ -261,30 +261,30 @@ body.home button:focus-visible {
 }
 .sa-hero-burger span {
   display: block;
-  width: 18px;
+  width: 14px;
   height: 1.5px;
   background: #fff;
   border-radius: 1px;
   transition: transform .25s, opacity .2s;
 }
-.sa-hero-burger.is-open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+.sa-hero-burger.is-open span:nth-child(1) { transform: translateY(5.5px) rotate(45deg); }
 .sa-hero-burger.is-open span:nth-child(2) { opacity: 0; }
-.sa-hero-burger.is-open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+.sa-hero-burger.is-open span:nth-child(3) { transform: translateY(-5.5px) rotate(-45deg); }
 
 /* Menu dropdown — transparent, behind burger, no border */
 .sa-hero-menu {
   position: absolute;
-  top: 24px;
-  left: 24px;
+  top: 20px;
+  left: 20px;
   display: flex;
   flex-direction: column;
-  min-width: 150px;
-  padding: 14px 0;
+  min-width: 130px;
+  padding: 10px 0;
   background: rgba(0,0,0,.35);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border: none;
-  border-radius: 14px;
+  border-radius: 12px;
   box-shadow: none;
   z-index: -1;
   transform-origin: top left;
@@ -302,8 +302,8 @@ body.home button:focus-visible {
 /* Links — staggered cascade */
 .sa-hero-menu a {
   display: block;
-  padding: 10px 22px;
-  font-size: 14px;
+  padding: 7px 18px;
+  font-size: 12px;
   font-weight: 500;
   color: rgba(255,255,255,.75);
   text-decoration: none;
@@ -325,9 +325,9 @@ body.home button:focus-visible {
 .sa-hero-menu a::after {
   content: '';
   position: absolute;
-  bottom: 4px;
-  left: 22px;
-  right: 22px;
+  bottom: 3px;
+  left: 18px;
+  right: 18px;
   height: 1px;
   background: var(--sa-accent);
   transform: scaleX(0);
