@@ -24,12 +24,3 @@ jobs:
                 ./saisonart-theme/ ${{ secrets.SFTP_PATH }}; \
                 quit" \
             sftp://${{ secrets.SFTP_HOST }}
-
-      - name: Verify deployment
-        run: |
-          lftp -u "${{ secrets.SFTP_USER }},${{ secrets.SFTP_PASSWORD }}" \
-            -e "set sftp:auto-confirm yes; \
-                ls ${{ secrets.SFTP_PATH }}; \
-                cat ${{ secrets.SFTP_PATH }}style.css; \
-                quit" \
-            sftp://${{ secrets.SFTP_HOST }}
