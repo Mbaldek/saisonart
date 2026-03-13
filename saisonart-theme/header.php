@@ -36,14 +36,11 @@ if (!is_front_page() && !empty($sa_s['announce_enabled']) && $sa_s['announce_ena
 </div>
 <?php endif; endif; ?>
 
-<!-- ═══════ HEADER ═══════ -->
-<header class="sa-header <?php echo is_front_page() ? 'sa-header--dark' : 'sa-header--light'; ?>" id="sa-header">
+<!-- ═══════ HEADER (not rendered on homepage — hero has its own nav) ═══════ -->
+<?php if (!is_front_page()) : ?>
+<header class="sa-header sa-header--light" id="sa-header">
   <a href="<?php echo esc_url(home_url('/')); ?>" class="sa-header-logo">
-    <?php
-    $logo_variant = is_front_page() ? 'light' : 'dark';
-    $logo_url = get_stylesheet_directory_uri() . '/assets/images/logo-saisonart-' . $logo_variant . '.svg';
-    ?>
-    <img src="<?php echo esc_url($logo_url); ?>"
+    <img src="<?php echo esc_url(get_stylesheet_directory_uri() . '/assets/images/logo-saisonart-dark.svg'); ?>"
          alt="<?php echo esc_attr(get_bloginfo('name')); ?>">
   </a>
 
@@ -91,5 +88,6 @@ if (!is_front_page() && !empty($sa_s['announce_enabled']) && $sa_s['announce_ena
   <a href="<?php echo esc_url(home_url('/contact-us/')); ?>">Contact</a>
   <a href="<?php echo esc_url(wc_get_cart_url()); ?>">Panier</a>
 </nav>
+<?php endif; ?>
 
 <div id="content" class="site-content" tabindex="-1">
