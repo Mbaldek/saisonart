@@ -576,3 +576,10 @@ function saisonart_remove_storefront_actions() {
     // Remove Storefront inline customizer CSS that injects background-color on body
     remove_action('wp_enqueue_scripts', 'storefront_add_customizer_css', 130);
 }
+
+/* --------------------------------------------------------------------------
+   Sales funnel: redirect to cart after add-to-cart
+   -------------------------------------------------------------------------- */
+add_filter('woocommerce_add_to_cart_redirect', function () {
+    return wc_get_cart_url();
+});

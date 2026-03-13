@@ -720,6 +720,18 @@ ul.products li.product .sa-pcard-img img {
   transform: translateY(-1px);
 }
 
+/* Hide express payment buttons (Stripe/Google Pay) on product page */
+.sa-product-info .wc-stripe-payment-request-wrapper,
+.sa-product-info .woocommerce-checkout-payment,
+.sa-product-info #wc-stripe-payment-request-button-separator,
+.sa-product-info .wc-block-components-express-payment,
+.sa-product-info .woocommerce-variation-add-to-cart .wc_payment_methods,
+.single-product .wc-stripe-payment-request-wrapper,
+.single-product #wc-stripe-payment-request-button-separator,
+.single-product .wc-stripe-payment-request-button-wrapper {
+  display: none !important;
+}
+
 .sa-btn-secondary {
   display: flex;
   align-items: center;
