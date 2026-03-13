@@ -47,7 +47,8 @@ $cats_plain = wp_strip_all_tags($cats);
   <div class="sa-product-gallery">
     <div class="sa-gallery-main">
       <img id="saMainImg" src="<?php echo esc_url($main_image_url); ?>"
-           alt="<?php echo esc_attr($product->get_name()); ?>">
+           alt="<?php echo esc_attr($product->get_name()); ?>"
+           loading="lazy" decoding="async">
     </div>
     <?php if (count($all_images) > 1) : ?>
       <div class="sa-gallery-thumbs">

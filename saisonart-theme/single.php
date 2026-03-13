@@ -30,12 +30,12 @@ get_header(); ?>
 
 <?php if ($thumb) : ?>
 <div class="sa-post-hero-img">
-  <img src="<?php echo esc_url($thumb); ?>" alt="<?php the_title_attribute(); ?>">
+  <img src="<?php echo esc_url($thumb); ?>" alt="<?php the_title_attribute(); ?>" loading="lazy" decoding="async">
 </div>
 <?php endif; ?>
 
 <!-- ═══════ POST CONTENT ═══════ -->
-<article class="sa-post-content">
+<article class="sa-post-content reveal">
   <?php the_content(); ?>
 </article>
 

@@ -471,6 +471,21 @@ body.archive:not(.woocommerce-page) .sa-header-burger span {
 }
 
 /* ── Responsive ────────────────────────────── */
+@media (max-width: 768px) {
+  .sa-mag-hero {
+    padding: 120px 6% 48px;
+  }
+  .sa-post-header {
+    padding: 120px 6% 36px;
+  }
+  .sa-post-content {
+    font-size: 15px;
+  }
+  .sa-post-hero-img {
+    padding: 0 5%;
+  }
+}
+
 @media (max-width: 900px) {
   .sa-mag-grid {
     grid-template-columns: repeat(2, 1fr);

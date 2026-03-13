@@ -21,7 +21,7 @@ get_header(); ?>
   <div class="sa-contact-grid">
 
     <!-- Form -->
-    <div class="sa-contact-form-wrap">
+    <div class="sa-contact-form-wrap reveal">
       <h2>Envoyez-nous un message</h2>
       <div class="sa-contact-form">
         <div class="sa-form-field">
@@ -59,7 +59,7 @@ get_header(); ?>
     </div>
 
     <!-- Info -->
-    <div class="sa-contact-info">
+    <div class="sa-contact-info reveal reveal-delay-1">
       <div class="sa-contact-info-card">
         <div class="sa-contact-info-item">
           <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>

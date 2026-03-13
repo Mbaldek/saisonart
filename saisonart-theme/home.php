@@ -20,7 +20,7 @@ get_header(); ?>
 <section class="sa-mag-articles">
   <?php if (have_posts()) : ?>
 
-  <div class="sa-mag-grid">
+  <div class="sa-mag-grid reveal">
     <?php
     $post_index = 0;
     while (have_posts()) : the_post();

@@ -317,16 +317,38 @@ body.page-template-page-contact .sa-header-burger span {
 }
 
 /* ── Responsive ────────────────────────────── */
-@media (max-width: 768px) {
-  .sa-contact-hero {
-    padding: 120px 6% 48px;
-  }
+@media (max-width: 900px) {
   .sa-contact-grid {
     grid-template-columns: 1fr;
     gap: 40px;
   }
+}
+
+@media (max-width: 768px) {
+  .sa-contact-hero {
+    padding: 120px 6% 48px;
+  }
   .sa-contact-garanties {
     flex-direction: column;
     gap: 12px;
+  }
+}
+
+@media (max-width: 600px) {
+  .sa-contact-hero {
+    padding: 100px 5% 36px;
+  }
+  .sa-contact-h1 {
+    font-size: 1.8rem;
+  }
+  .sa-contact-content {
+    padding: 0 5% 60px;
+  }
+  .sa-contact-info-card {
+    padding: 24px;
+  }
+  .sa-contact-submit {
+    width: 100%;
+    justify-content: center;
   }
 }
