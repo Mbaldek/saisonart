@@ -680,23 +680,23 @@ function saisonart_dequeue_wc_blocks() {
 }
 
 /* --------------------------------------------------------------------------
-   Product page V2 test — add ?v2 to any product URL to use single-product-v2.php
+   Product page V1 fallback — add ?v1 to any product URL to use old template
    -------------------------------------------------------------------------- */
 add_filter('template_include', function ($template) {
-    if (is_product() && isset($_GET['v2'])) {
-        $v2 = get_stylesheet_directory() . '/woocommerce/single-product-v2.php';
-        if (file_exists($v2)) {
-            return $v2;
+    if (is_product() && isset($_GET['v1'])) {
+        $v1 = get_stylesheet_directory() . '/woocommerce/single-product-v1.php';
+        if (file_exists($v1)) {
+            return $v1;
         }
     }
     return $template;
 }, 99);
 
 /* --------------------------------------------------------------------------
-   Product V2 — CSS enqueue
+   Product page — V2 CSS (now default)
    -------------------------------------------------------------------------- */
 add_action('wp_enqueue_scripts', function () {
-    if (is_product() && isset($_GET['v2'])) {
+    if (is_product() && !isset($_GET['v1'])) {
         wp_enqueue_style(
             'sa-product-v2',
             get_stylesheet_directory_uri() . '/assets/css/product-v2.css',
