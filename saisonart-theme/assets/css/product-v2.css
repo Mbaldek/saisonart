@@ -28,6 +28,22 @@ body.single-product {
   color: var(--v2-white);
 }
 
+/* ── Unlock sticky: Storefront sets overflow:hidden on wrappers ── */
+body.single-product #page,
+body.single-product .site-content,
+body.single-product #content {
+  overflow: visible !important;
+}
+
+/* ── Hide express payment (Google Pay etc.) globally on product page ── */
+body.single-product .wc-block-components-express-payment,
+body.single-product #wc-stripe-payment-request-wrapper,
+body.single-product .wcpay-payment-request-wrapper,
+body.single-product #wcpay-payment-request-wrapper,
+body.single-product #wcpay-payment-request-button-separator {
+  display: none !important;
+}
+
 /* ════════════════════════════════════════════════════════════
    PRODUCT LAYOUT — 2 colonnes
    ════════════════════════════════════════════════════════════ */
