@@ -66,6 +66,11 @@ function saisonart_enqueue_styles() {
         wp_enqueue_script('saisonart-boutique', get_stylesheet_directory_uri() . '/assets/js/boutique.js', array(), $version, true);
     }
 
+    // Checkout funnel styles (cart, checkout, my-account)
+    if (is_cart() || is_checkout() || is_account_page()) {
+        wp_enqueue_style('saisonart-checkout', get_stylesheet_directory_uri() . '/assets/css/checkout.css', array('saisonart-main'), $version);
+    }
+
     // Engagement styles
     wp_enqueue_style('saisonart-engagement', get_stylesheet_directory_uri() . '/assets/css/engagement.css', array('saisonart-main'), $version);
 
@@ -101,6 +106,19 @@ function saisonart_setup() {
     register_nav_menus(array(
         'sa-primary' => 'Navigation principale SaisonArt',
     ));
+}
+
+/* --------------------------------------------------------------------------
+   Checkout funnel: trust badges
+   -------------------------------------------------------------------------- */
+add_action('woocommerce_after_cart', 'saisonart_checkout_trust');
+add_action('woocommerce_review_order_after_submit', 'saisonart_checkout_trust');
+function saisonart_checkout_trust() {
+    echo '<div class="sa-checkout-trust">';
+    echo '<div class="sa-checkout-trust-item"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg><span>Paiement sécurisé</span></div>';
+    echo '<div class="sa-checkout-trust-item"><svg viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg><span>Livraison assurée 48h</span></div>';
+    echo '<div class="sa-checkout-trust-item"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>Retour 14 jours</span></div>';
+    echo '</div>';
 }
 
 /* --------------------------------------------------------------------------
