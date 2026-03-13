@@ -13,6 +13,12 @@ if (file_exists($sa_inc . 'engagement-admin.php')) {
 if (file_exists($sa_inc . 'resend-handler.php')) {
     require_once $sa_inc . 'resend-handler.php';
 }
+// Fallback: ensure sa_engage_get() always exists (prevents fatal in footer/front-page)
+if (!function_exists('sa_engage_get')) {
+    function sa_engage_get($key = null) {
+        return $key ? '' : array();
+    }
+}
 
 /* Debug: confirm child theme is active (remove after verification) */
 add_action('wp_footer', function() {
