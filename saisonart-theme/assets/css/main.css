@@ -52,14 +52,28 @@ html { scroll-behavior: smooth; }
 body {
   font-family: var(--sa-font-b) !important;
   color: var(--sa-text) !important;
+  background-color: var(--sa-darkest) !important;
   -webkit-font-smoothing: antialiased;
 }
 
-/* Kill Storefront default backgrounds on wrapper divs */
+/* Kill Storefront default backgrounds on ALL wrapper divs */
 #page,
 #content,
-.site-content {
+.site-content,
+.col-full,
+.site-main,
+.content-area,
+#primary {
   background: transparent !important;
+  padding: 0 !important;
+  margin: 0 auto !important;
+  max-width: none !important;
+}
+
+/* Force body background on homepage */
+body.home,
+body.home #page {
+  background: var(--sa-darkest) !important;
 }
 
 h1, h2, h3, h4, h5, h6,

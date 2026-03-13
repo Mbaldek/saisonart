@@ -572,4 +572,7 @@ function saisonart_remove_storefront_actions() {
     // Remove ALL Storefront footer hooks (we use custom footer.php)
     remove_action('storefront_footer', 'storefront_footer_widgets', 10);
     remove_action('storefront_footer', 'storefront_credit', 20);
+
+    // Remove Storefront inline customizer CSS that injects background-color on body
+    remove_action('wp_enqueue_scripts', 'storefront_add_customizer_css', 130);
 }

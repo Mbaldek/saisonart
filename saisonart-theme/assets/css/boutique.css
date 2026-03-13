@@ -284,7 +284,7 @@ ul.products li.product {
 
 .sa-pcard-img {
   width: 100%;
-  padding-top: 110%;
+  padding-top: 75%;
   position: relative;
   overflow: hidden;
   background: var(--sa-darkest);
