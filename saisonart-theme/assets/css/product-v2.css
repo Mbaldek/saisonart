@@ -212,6 +212,67 @@
   color: rgba(255,255,255,.55) !important;
   text-align: center !important;
   margin: 4px 0 0 !important;
+  padding: 0 !important;
+}
+/* Masquer shortcodes bruts résiduels */
+.woocommerce-Tabs-panel--description br + code,
+.woocommerce-Tabs-panel--description > code {
+  display: none !important;
+}
+
+/* ── Additional Information table — dark theme ── */
+.single-product div.product .woocommerce-Tabs-panel--additional-information {
+  margin-top: 32px !important;
+}
+.single-product div.product .woocommerce-Tabs-panel--additional-information table {
+  background: var(--sa-darker) !important;
+  border: 1px solid var(--sa-border) !important;
+  border-radius: var(--sa-radius) !important;
+  border-collapse: separate !important;
+  border-spacing: 0 !important;
+  overflow: hidden !important;
+  width: 100% !important;
+}
+.single-product div.product .woocommerce-Tabs-panel--additional-information table th,
+.single-product div.product .woocommerce-Tabs-panel--additional-information table td {
+  background: transparent !important;
+  border: none !important;
+  border-bottom: 1px solid var(--sa-border) !important;
+  padding: 14px 20px !important;
+  font-family: var(--sa-font-b) !important;
+  font-size: 13px !important;
+  vertical-align: top !important;
+}
+.single-product div.product .woocommerce-Tabs-panel--additional-information table th {
+  color: rgba(255,255,255,.45) !important;
+  font-weight: 500 !important;
+  width: 40% !important;
+}
+.single-product div.product .woocommerce-Tabs-panel--additional-information table td {
+  color: #fff !important;
+}
+.single-product div.product .woocommerce-Tabs-panel--additional-information table td p {
+  color: #fff !important;
+  margin: 0 !important;
+}
+.single-product div.product .woocommerce-Tabs-panel--additional-information table tr:last-child th,
+.single-product div.product .woocommerce-Tabs-panel--additional-information table tr:last-child td {
+  border-bottom: none !important;
+}
+
+/* ── Hide express payment (Google Pay etc.) in sidebar ── */
+.single-product div.summary .wc-block-components-express-payment,
+.single-product div.summary #wc-stripe-payment-request-wrapper,
+.single-product div.summary .woocommerce-variation-add-to-cart .wc-block-components-express-payment-continue-rule,
+.single-product div.summary .wcpay-payment-request-wrapper,
+.single-product div.summary #wcpay-payment-request-button-separator,
+.single-product div.summary #wcpay-payment-request-wrapper {
+  display: none !important;
+}
+
+/* ── Hide default product_meta (we use chips instead) ── */
+.single-product div.product div.summary .product_meta {
+  display: none !important;
 }
 
 
@@ -422,16 +483,7 @@
   flex-shrink: 0;
 }
 
-/* Masquer meta WC (SKU, catégorie) */
-.single-product div.product div.summary .product_meta {
-  padding: 12px 28px !important;
-  font-size: 12px !important;
-  color: rgba(255,255,255,.55) !important;
-  border-top: 1px solid var(--sa-border) !important;
-}
-.single-product div.product div.summary .product_meta a {
-  color: var(--sa-accent) !important;
-}
+/* product_meta hidden — see rule at line ~274 */
 .single-product div.product div.summary .woocommerce-product-rating {
   padding: 8px 28px !important;
   margin: 0 !important;

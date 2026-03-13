@@ -730,6 +730,11 @@ add_action('init', function () {
     // Utilities
     add_filter('woocommerce_product_description_heading', '__return_empty_string');
     add_filter('woocommerce_product_additional_information_heading', '__return_empty_string');
+    // Remove "Additional Information" tab — attributes shown as chips in sidebar
+    add_filter('woocommerce_product_tabs', function ($tabs) {
+        unset($tabs['additional_information']);
+        return $tabs;
+    });
     add_filter('woocommerce_quantity_input_args', function ($args, $product) {
         if (is_product() && $product && $product->get_stock_quantity() <= 1) {
             $args['min_value'] = 1;
@@ -773,52 +778,78 @@ function sav2_sidebar_eyebrow() {
     <?php
 }
 
-/* Meta chips — technique, dimensions, période, école, état */
+/* Meta chips — flexible matching for all WC attribute slug variants */
 function sav2_sidebar_meta_chips() {
     if (!is_product()) return;
     $product = wc_get_product(get_the_ID());
     if (!$product) return;
 
-    $icon_map = array(
-        'technique'  => '<svg viewBox="0 0 24 24"><circle cx="13.5" cy="6.5" r="2.5"/><circle cx="17" cy="12" r="1.5"/><circle cx="8" cy="8" r="2"/><circle cx="6" cy="14" r="1.5"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.9 0 1.5-.7 1.5-1.5 0-.4-.1-.7-.4-1-.3-.3-.4-.6-.4-1 0-.8.7-1.5 1.5-1.5H16c3.3 0 6-2.7 6-6 0-5.5-4.5-9-10-9z"/></svg>',
-        'dimensions' => '<svg viewBox="0 0 24 24"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>',
-        'periode'    => '<svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>',
-        'ecole'      => '<svg viewBox="0 0 24 24"><line x1="6" y1="20" x2="6" y2="9"/><line x1="10" y1="20" x2="10" y2="9"/><line x1="14" y1="20" x2="14" y2="9"/><line x1="18" y1="20" x2="18" y2="9"/><path d="M3 20h18"/><path d="M2 9h20l-2-4H4L2 9z"/></svg>',
-        'etat'       => '<svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="1"/><rect x="7" y="7" width="10" height="10" rx="1"/></svg>',
+    // Keyword → SVG icon (matched via strpos on normalized slug)
+    $icon_kw = array(
+        'technique'   => '<svg viewBox="0 0 24 24"><circle cx="13.5" cy="6.5" r="2.5"/><circle cx="17" cy="12" r="1.5"/><circle cx="8" cy="8" r="2"/><circle cx="6" cy="14" r="1.5"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.9 0 1.5-.7 1.5-1.5 0-.4-.1-.7-.4-1-.3-.3-.4-.6-.4-1 0-.8.7-1.5 1.5-1.5H16c3.3 0 6-2.7 6-6 0-5.5-4.5-9-10-9z"/></svg>',
+        'medium'      => '<svg viewBox="0 0 24 24"><circle cx="13.5" cy="6.5" r="2.5"/><circle cx="17" cy="12" r="1.5"/><circle cx="8" cy="8" r="2"/><circle cx="6" cy="14" r="1.5"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.9 0 1.5-.7 1.5-1.5 0-.4-.1-.7-.4-1-.3-.3-.4-.6-.4-1 0-.8.7-1.5 1.5-1.5H16c3.3 0 6-2.7 6-6 0-5.5-4.5-9-10-9z"/></svg>',
+        'dimension'   => '<svg viewBox="0 0 24 24"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>',
+        'format'      => '<svg viewBox="0 0 24 24"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>',
+        'taille'      => '<svg viewBox="0 0 24 24"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>',
+        'periode'     => '<svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>',
+        'date'        => '<svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>',
+        'annee'       => '<svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>',
+        'ecole'       => '<svg viewBox="0 0 24 24"><line x1="6" y1="20" x2="6" y2="9"/><line x1="10" y1="20" x2="10" y2="9"/><line x1="14" y1="20" x2="14" y2="9"/><line x1="18" y1="20" x2="18" y2="9"/><path d="M3 20h18"/><path d="M2 9h20l-2-4H4L2 9z"/></svg>',
+        'etat'        => '<svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="1"/><rect x="7" y="7" width="10" height="10" rx="1"/></svg>',
+        'condition'   => '<svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="1"/><rect x="7" y="7" width="10" height="10" rx="1"/></svg>',
+        'signature'   => '<svg viewBox="0 0 24 24"><path d="M17 3a2.83 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>',
+        'encadrement' => '<svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="1"/><rect x="5" y="5" width="14" height="14" rx="1"/></svg>',
     );
+    $default_icon = '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>';
+
+    // Skip these (not useful as chips)
+    $skip = array('prix', 'price', 'couleur', 'color', 'statut', 'status', 'sujet', 'subject', 'artiste', 'artist', 'dominant');
 
     $chips = array();
 
-    // Source 1: WooCommerce attributes
+    // Read ALL WC attributes, match flexibly
     $attributes = $product->get_attributes();
     foreach ($attributes as $slug => $attribute) {
-        $slug_clean = str_replace('pa_', '', $slug);
-        if (!isset($icon_map[$slug_clean])) continue;
-        $values = wc_get_product_terms(get_the_ID(), $slug, array('fields' => 'names'));
-        if (empty($values)) {
+        $slug_norm = strtolower(str_replace(array('pa_', 'pa-', '-', '_'), '', $slug));
+
+        // Skip irrelevant
+        $do_skip = false;
+        foreach ($skip as $s) { if (strpos($slug_norm, $s) !== false) { $do_skip = true; break; } }
+        if ($do_skip) continue;
+
+        // Get values
+        if ($attribute->is_taxonomy()) {
+            $values = wc_get_product_terms(get_the_ID(), $attribute->get_name(), array('fields' => 'names'));
+        } else {
             $values = $attribute->get_options();
         }
-        if (!empty($values)) {
-            $chips[] = array(
-                'icon'  => $icon_map[$slug_clean],
-                'value' => implode(', ', array_map('esc_html', (array)$values)),
-            );
+        if (empty($values)) continue;
+
+        // Match icon
+        $icon = $default_icon;
+        foreach ($icon_kw as $kw => $svg) {
+            if (strpos($slug_norm, $kw) !== false) { $icon = $svg; break; }
         }
+
+        $chips[] = array(
+            'icon'  => $icon,
+            'value' => implode(', ', array_map('esc_html', (array)$values)),
+        );
     }
 
-    // Source 2: Custom meta fallback
+    // Fallback: custom meta
     if (empty($chips)) {
         $meta_map = array(
             '_sa_technique'  => 'technique',
-            '_sa_dimensions' => 'dimensions',
+            '_sa_dimensions' => 'dimension',
             '_sa_periode'    => 'periode',
             '_sa_ecole'      => 'ecole',
             '_sa_etat'       => 'etat',
         );
-        foreach ($meta_map as $key => $slug) {
+        foreach ($meta_map as $key => $kw) {
             $val = get_post_meta(get_the_ID(), $key, true);
             if ($val) {
-                $chips[] = array('icon' => $icon_map[$slug], 'value' => esc_html($val));
+                $chips[] = array('icon' => $icon_kw[$kw], 'value' => esc_html($val));
             }
         }
     }
@@ -1016,10 +1047,10 @@ function sav2_mobile_bar() {
 }
 
 /* --------------------------------------------------------------------------
-   Sales funnel: redirect to cart after add-to-cart
+   Sales funnel: stay on product page after add-to-cart
    -------------------------------------------------------------------------- */
 add_filter('woocommerce_add_to_cart_redirect', function () {
-    return wc_get_cart_url();
+    return wp_get_referer() ?: wc_get_cart_url();
 });
 
 /* ══════════════════════════════════════════════════════════════
