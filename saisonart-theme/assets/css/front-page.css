@@ -534,9 +534,11 @@ body.home button:focus-visible {
 .sa-card-overlay {
   position: absolute;
   inset: 0;
+  display: block;
   background: linear-gradient(to top, rgba(13, 22, 16, .8) 0%, transparent 50%);
   opacity: 0;
   transition: opacity .3s;
+  z-index: 2;
 }
 
 .sa-card:hover .sa-card-overlay {

@@ -116,8 +116,8 @@ get_header(); ?>
         <img src="<?php echo esc_url($image_url); ?>"
              alt="<?php echo esc_attr($product->get_name() . ($artist ? ' par ' . $artist : '') . ' — peinture originale'); ?>"
              loading="lazy" decoding="async">
-        <div class="sa-card-overlay"></div>
-        <div class="sa-card-hover-btn">Voir l'œuvre →</div>
+        <a href="<?php echo esc_url($product->get_permalink()); ?>" class="sa-card-overlay"></a>
+        <a href="<?php echo esc_url($product->get_permalink()); ?>" class="sa-card-hover-btn">Voir l'œuvre →</a>
         <?php if (!empty(sa_engage_get('hearts_enabled')) && sa_engage_get('hearts_enabled') !== '0') : ?>
           <button class="sa-heart" data-product-id="<?php echo esc_attr($product->get_id()); ?>" aria-label="Ajouter aux favoris">
             <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>

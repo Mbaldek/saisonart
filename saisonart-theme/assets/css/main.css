@@ -459,6 +459,137 @@ img { max-width: 100%; height: auto; }
   color: rgba(255,255,255,.5);
 }
 
+/* ── 4b. DARK THEME — Standard pages (contact, news, legal) ── */
+/* Applies to all pages except homepage, WooCommerce, and conseil */
+body.page:not(.home):not(.woocommerce-page):not(.page-template-page-conseil),
+body.blog,
+body.single-post,
+body.archive:not(.woocommerce-page) {
+  background: var(--sa-darkest) !important;
+  color: var(--sa-text-hp) !important;
+}
+
+/* Header dark override for standard pages */
+body.page:not(.home):not(.woocommerce-page):not(.page-template-page-conseil) .sa-header,
+body.blog .sa-header,
+body.single-post .sa-header,
+body.archive:not(.woocommerce-page) .sa-header {
+  background: rgba(13,22,16,.92) !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--sa-border);
+}
+body.page:not(.home):not(.woocommerce-page):not(.page-template-page-conseil) .sa-header-logo img,
+body.blog .sa-header-logo img,
+body.single-post .sa-header-logo img,
+body.archive:not(.woocommerce-page) .sa-header-logo img {
+  filter: brightness(0) invert(1);
+}
+body.page:not(.home):not(.woocommerce-page):not(.page-template-page-conseil) .sa-nav a,
+body.blog .sa-nav a,
+body.single-post .sa-nav a,
+body.archive:not(.woocommerce-page) .sa-nav a {
+  color: rgba(255,255,255,.45) !important;
+}
+body.page:not(.home):not(.woocommerce-page):not(.page-template-page-conseil) .sa-nav a:hover,
+body.page:not(.home):not(.woocommerce-page):not(.page-template-page-conseil) .sa-nav a.active,
+body.blog .sa-nav a:hover,
+body.blog .sa-nav a.active,
+body.single-post .sa-nav a:hover,
+body.single-post .sa-nav a.active,
+body.archive:not(.woocommerce-page) .sa-nav a:hover,
+body.archive:not(.woocommerce-page) .sa-nav a.active {
+  color: #fff !important;
+}
+body.page:not(.home):not(.woocommerce-page):not(.page-template-page-conseil) .sa-header-cart svg,
+body.blog .sa-header-cart svg,
+body.single-post .sa-header-cart svg,
+body.archive:not(.woocommerce-page) .sa-header-cart svg {
+  stroke: rgba(255,255,255,.6);
+}
+body.page:not(.home):not(.woocommerce-page):not(.page-template-page-conseil) .sa-header-burger span,
+body.blog .sa-header-burger span,
+body.single-post .sa-header-burger span,
+body.archive:not(.woocommerce-page) .sa-header-burger span {
+  background: #fff !important;
+}
+
+/* Content area — dark text defaults */
+body.page:not(.home):not(.woocommerce-page):not(.page-template-page-conseil) #content,
+body.blog #content,
+body.single-post #content,
+body.archive:not(.woocommerce-page) #content {
+  padding-top: 0 !important;
+}
+
+body.page:not(.home):not(.woocommerce-page):not(.page-template-page-conseil) .entry-content,
+body.page:not(.home):not(.woocommerce-page):not(.page-template-page-conseil) .page-content,
+body.blog .entry-content,
+body.single-post .entry-content,
+body.archive:not(.woocommerce-page) .entry-content {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 48px 7%;
+  color: rgba(255,255,255,.75);
+  line-height: 1.8;
+}
+
+body.page:not(.home):not(.woocommerce-page):not(.page-template-page-conseil) .entry-title,
+body.page:not(.home):not(.woocommerce-page):not(.page-template-page-conseil) .page-title,
+body.blog .page-title,
+body.single-post .entry-title,
+body.archive:not(.woocommerce-page) .page-title {
+  font-family: var(--sa-font-h);
+  color: #fff !important;
+  padding: 48px 7% 16px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+body.page:not(.home):not(.woocommerce-page):not(.page-template-page-conseil) .entry-content h2,
+body.page:not(.home):not(.woocommerce-page):not(.page-template-page-conseil) .entry-content h3,
+body.blog .entry-content h2,
+body.single-post .entry-content h2,
+body.single-post .entry-content h3 {
+  color: #fff;
+}
+
+body.page:not(.home):not(.woocommerce-page):not(.page-template-page-conseil) .entry-content a,
+body.blog .entry-content a,
+body.single-post .entry-content a {
+  color: var(--sa-accent2);
+}
+
+/* Footer border override (already dark) */
+body.page:not(.home):not(.woocommerce-page):not(.page-template-page-conseil) .sa-footer,
+body.blog .sa-footer,
+body.single-post .sa-footer,
+body.archive:not(.woocommerce-page) .sa-footer {
+  border-top: 1px solid var(--sa-border);
+}
+
+/* Blog archive — post cards */
+body.blog .hentry,
+body.archive:not(.woocommerce-page) .hentry {
+  background: rgba(255,255,255,.03);
+  border: 1px solid var(--sa-border);
+  border-radius: var(--sa-radius);
+  padding: 28px 32px;
+  margin-bottom: 20px;
+}
+body.blog .hentry .entry-title a,
+body.archive:not(.woocommerce-page) .hentry .entry-title a {
+  color: #fff;
+}
+body.blog .hentry .entry-title a:hover,
+body.archive:not(.woocommerce-page) .hentry .entry-title a:hover {
+  color: var(--sa-accent2);
+}
+body.blog .hentry .entry-meta,
+body.archive:not(.woocommerce-page) .hentry .entry-meta {
+  color: rgba(255,255,255,.3);
+}
+
 /* ── 5. WOOCOMMERCE — SHOP PAGES (light) ─────────────────── */
 .woocommerce-page:not(.home) body,
 body.woocommerce-page:not(.home),

@@ -110,10 +110,13 @@
       updateStack(i);
     }
 
-    // Click on card
+    // Click on card — non-active cards switch carousel, active card follows link
     cards.forEach(function (card, i) {
-      card.addEventListener('click', function () {
-        if (i !== currentCard) goToCard(i);
+      card.addEventListener('click', function (e) {
+        if (i !== currentCard) {
+          e.preventDefault();
+          goToCard(i);
+        }
       });
     });
 
