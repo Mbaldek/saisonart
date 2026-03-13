@@ -17,10 +17,11 @@ body.home #page {
   margin-top: 0 !important;
 }
 
-/* Hide header & announcement bar on homepage — start directly on hero */
+/* Hide header, announcement & reassurance bars on homepage — hero starts immediately */
 body.home .sa-announce,
 body.home .sa-header,
-body.home .sa-header-mobile-menu {
+body.home .sa-header-mobile-menu,
+body.home .sa-reassurance {
   display: none !important;
 }
 
@@ -270,21 +271,22 @@ body.home button:focus-visible {
 .sa-hero-burger.is-open span:nth-child(2) { opacity: 0; }
 .sa-hero-burger.is-open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
 
-/* Menu dropdown — frosted glass + gold accents */
+/* Menu dropdown — transparent, behind burger, no border */
 .sa-hero-menu {
   position: absolute;
   top: 24px;
   left: 24px;
   display: flex;
   flex-direction: column;
-  min-width: 180px;
+  min-width: 150px;
   padding: 14px 0;
-  background: rgba(255,255,255,.12);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255,255,255,.18);
-  border-radius: 16px;
-  box-shadow: 0 8px 32px rgba(0,0,0,.25);
+  background: rgba(0,0,0,.35);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: none;
+  border-radius: 14px;
+  box-shadow: none;
+  z-index: -1;
   transform-origin: top left;
   transform: scaleY(0) scaleX(0.85);
   opacity: 0;
@@ -295,19 +297,6 @@ body.home button:focus-visible {
   transform: scaleY(1) scaleX(1);
   opacity: 1;
   pointer-events: auto;
-}
-
-/* Gold bottom edge */
-.sa-hero-menu::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 10%;
-  right: 10%;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--sa-accent), transparent);
-  opacity: .4;
-  border-radius: 1px;
 }
 
 /* Links — staggered cascade */
