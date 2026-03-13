@@ -6,8 +6,7 @@
 </div><!-- #content -->
 
 <!-- ═══════ FOOTER ═══════ -->
-<!-- SA-FOOTER-DEPLOYED -->
-<footer class="sa-footer" id="colophon" style="background:#2c3d35;padding:64px 7% 0;color:#fff">
+<footer class="sa-footer" id="sa-footer">
   <div class="sa-ft-grid">
     <!-- Brand -->
     <div>

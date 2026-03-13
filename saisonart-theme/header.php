@@ -37,7 +37,7 @@ if (!empty($sa_s['announce_enabled']) && $sa_s['announce_enabled'] !== '0') :
 <?php endif; endif; ?>
 
 <!-- ═══════ HEADER ═══════ -->
-<header class="sa-header <?php echo is_front_page() ? 'sa-header--dark' : 'sa-header--light'; ?>" id="masthead">
+<header class="sa-header <?php echo is_front_page() ? 'sa-header--dark' : 'sa-header--light'; ?>" id="sa-header">
   <a href="<?php echo esc_url(home_url('/')); ?>" class="sa-header-logo">
     <?php
     $logo_variant = is_front_page() ? 'light' : 'dark';

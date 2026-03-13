@@ -20,10 +20,6 @@ if (!function_exists('sa_engage_get')) {
     }
 }
 
-/* Debug: confirm child theme is active (remove after verification) */
-add_action('wp_footer', function() {
-    echo '<!-- SA-CHILD-ACTIVE -->';
-});
 
 /* --------------------------------------------------------------------------
    Enqueue styles & scripts
