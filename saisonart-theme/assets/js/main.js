@@ -70,29 +70,33 @@
         card.style.zIndex = total - offset;
         card.style.left = '50%';
         if (offset === 0) {
-          // Active card — morph wider, landscape ratio
+          // Active card — massive morph, cinematic ratio
           card.style.transform = 'translateX(-50%) translateY(0) rotateY(0deg) scale(1)';
           card.style.opacity = '1';
           card.style.filter = 'blur(0)';
-          card.style.width = '400px';
-          if (imgEl) imgEl.style.paddingTop = '70%';
+          card.style.width = '580px';
+          card.style.boxShadow = '0 30px 80px rgba(0,0,0,.6), 0 0 50px rgba(139,94,60,.12)';
+          if (imgEl) imgEl.style.paddingTop = '58%';
         } else if (offset === 1) {
-          card.style.transform = 'translateX(calc(-50% + 220px)) translateY(22px) rotateY(-8deg) scale(.95)';
-          card.style.opacity = '.75';
-          card.style.filter = 'blur(2px)';
-          card.style.width = '260px';
+          card.style.transform = 'translateX(calc(-50% + 340px)) translateY(30px) rotateY(-8deg) scale(.78)';
+          card.style.opacity = '.35';
+          card.style.filter = 'blur(8px)';
+          card.style.width = '240px';
+          card.style.boxShadow = '0 20px 60px rgba(0,0,0,.4)';
           if (imgEl) imgEl.style.paddingTop = '85%';
         } else if (offset === 2) {
-          card.style.transform = 'translateX(calc(-50% + 380px)) translateY(40px) rotateY(-14deg) scale(.9)';
-          card.style.opacity = '.45';
-          card.style.filter = 'blur(4px)';
-          card.style.width = '260px';
+          card.style.transform = 'translateX(calc(-50% + 500px)) translateY(50px) rotateY(-14deg) scale(.65)';
+          card.style.opacity = '.15';
+          card.style.filter = 'blur(14px)';
+          card.style.width = '220px';
+          card.style.boxShadow = '0 20px 60px rgba(0,0,0,.4)';
           if (imgEl) imgEl.style.paddingTop = '85%';
         } else {
-          card.style.transform = 'translateX(calc(-50% - 220px)) translateY(22px) rotateY(8deg) scale(.95)';
-          card.style.opacity = '.75';
-          card.style.filter = 'blur(2px)';
-          card.style.width = '260px';
+          card.style.transform = 'translateX(calc(-50% - 340px)) translateY(30px) rotateY(8deg) scale(.78)';
+          card.style.opacity = '.35';
+          card.style.filter = 'blur(8px)';
+          card.style.width = '240px';
+          card.style.boxShadow = '0 20px 60px rgba(0,0,0,.4)';
           if (imgEl) imgEl.style.paddingTop = '85%';
         }
       });

@@ -17,10 +17,10 @@
 
 <div id="page" class="hfeed site">
 
-<!-- ═══════ ANNOUNCEMENT BAR ═══════ -->
+<!-- ═══════ ANNOUNCEMENT BAR (hidden on homepage) ═══════ -->
 <?php
 $sa_s = sa_engage_get();
-if (!empty($sa_s['announce_enabled']) && $sa_s['announce_enabled'] !== '0') :
+if (!is_front_page() && !empty($sa_s['announce_enabled']) && $sa_s['announce_enabled'] !== '0') :
     $sa_msgs = array_filter(array($sa_s['announce_msg_1'], $sa_s['announce_msg_2'], $sa_s['announce_msg_3']));
     if (!empty($sa_msgs)) :
 ?>

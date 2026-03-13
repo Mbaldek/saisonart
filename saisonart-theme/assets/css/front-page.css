@@ -1086,7 +1086,7 @@ body.home button:focus-visible {
 .sa-newsletter {
   position: relative;
   background: var(--sa-darker);
-  padding: 64px 7%;
+  padding: 48px 7%;
   overflow: hidden;
   text-align: center;
 }
@@ -1116,50 +1116,50 @@ body.home button:focus-visible {
 .sa-nl-inner {
   position: relative;
   z-index: 1;
-  max-width: 520px;
+  max-width: 420px;
   margin: 0 auto;
 }
 
 .sa-nl-icon {
-  width: 40px;
-  height: 40px;
-  border-radius: 12px;
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
   background: rgba(139, 94, 60, .12);
   border: 1px solid rgba(139, 94, 60, .2);
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0 auto 16px;
+  margin: 0 auto 12px;
 }
 
 .sa-nl-icon svg {
   stroke: var(--sa-accent);
   fill: none;
-  width: 17px;
-  height: 17px;
+  width: 14px;
+  height: 14px;
   stroke-width: 1.7;
 }
 
 .sa-nl-h2 {
   font-family: 'Playfair Display', serif;
-  font-size: clamp(20px, 2vw, 28px);
+  font-size: clamp(17px, 1.6vw, 22px);
   font-weight: 700;
   color: #fff;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
   line-height: 1.2;
 }
 
 .sa-nl-desc {
-  font-size: 12px;
+  font-size: 11px;
   color: var(--sa-dim);
-  line-height: 1.7;
-  margin-bottom: 20px;
+  line-height: 1.6;
+  margin-bottom: 14px;
 }
 
 .sa-nl-form {
   display: flex;
-  gap: 8px;
-  max-width: 380px;
+  gap: 6px;
+  max-width: 320px;
   margin: 0 auto;
 }
 
@@ -1168,10 +1168,10 @@ body.home button:focus-visible {
   background: rgba(255, 255, 255, .05);
   border: 1px solid var(--sa-border2);
   border-radius: 999px;
-  padding: 10px 16px;
+  padding: 7px 14px;
   color: #fff;
   font-family: 'DM Sans', sans-serif;
-  font-size: 12px;
+  font-size: 11px;
   outline: none;
   transition: border-color .2s;
 }
@@ -1185,13 +1185,13 @@ body.home button:focus-visible {
 }
 
 .sa-nl-btn {
-  padding: 10px 20px;
+  padding: 7px 16px;
   border-radius: 999px;
   border: none;
   background: var(--sa-accent);
   color: #fff;
   font-family: 'DM Sans', sans-serif;
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 600;
   cursor: pointer;
   white-space: nowrap;
@@ -1204,9 +1204,9 @@ body.home button:focus-visible {
 }
 
 .sa-nl-note {
-  font-size: 10px;
+  font-size: 9px;
   color: var(--sa-muted-hp);
-  margin-top: 10px;
+  margin-top: 8px;
 }
 
 /* ── ANIMATIONS ───────────────────────────────────────────── */

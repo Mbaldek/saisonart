@@ -18,6 +18,8 @@ get_header(); ?>
 
 <!-- ═══════ 3 SITUATIONS ═══════ -->
 <section class="sa-conseil-sits">
+  <div class="sa-cons-orb sa-cons-orb--1" aria-hidden="true"></div>
+  <div class="sa-cons-orb sa-cons-orb--2" aria-hidden="true"></div>
 
   <!-- Situation 1 — Chercher une œuvre -->
   <div class="sa-sit" id="saSit1">

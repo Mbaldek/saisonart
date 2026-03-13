@@ -7,6 +7,23 @@
 
   var C = window.saEngageConfig || {};
 
+  /* ── Scroll-reveal (cards + garanties) ──── */
+  var revealObserver = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('is-visible');
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+
+  document.querySelectorAll('.sa-sit').forEach(function (el) {
+    revealObserver.observe(el);
+  });
+  document.querySelectorAll('.sa-garantie').forEach(function (el) {
+    revealObserver.observe(el);
+  });
+
   /* ── Toggle situation cards ─────────────── */
   document.querySelectorAll('.sa-sit-trigger').forEach(function (btn) {
     btn.addEventListener('click', function (e) {

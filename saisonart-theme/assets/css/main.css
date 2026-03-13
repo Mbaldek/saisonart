@@ -56,6 +56,11 @@ h1, h2, h3, h4, h5, h6,
 
 a { color: var(--sa-accent); transition: var(--sa-trans); }
 a:hover { color: var(--sa-accent-h); }
+a:focus, button:focus { outline: none; }
+a:focus-visible, button:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(139, 94, 60, .4);
+}
 img { max-width: 100%; height: auto; }
 
 /* ── 3. HEADER ────────────────────────────────────────────── */
