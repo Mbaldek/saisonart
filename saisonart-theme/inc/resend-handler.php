@@ -59,6 +59,7 @@ function sa_capture_email() {
         'conseil-recherche'       => 'Conseil — Recherche d\'œuvre',
         'conseil-identification'  => 'Conseil — Identification tableau',
         'conseil-rdv'             => 'Conseil — Demande de RDV',
+        'contact'                 => 'Formulaire de contact',
     );
     $source_label = isset($source_labels[$source]) ? $source_labels[$source] : $source;
 
@@ -150,6 +151,7 @@ function sa_get_welcome_subject($source) {
         'conseil-recherche'      => 'Votre demande de recherche — SaisonArt',
         'conseil-identification' => 'Votre demande d\'identification — SaisonArt',
         'conseil-rdv'            => 'Votre demande de rendez-vous — SaisonArt',
+        'contact'                => 'Nous avons bien reçu votre message — SaisonArt',
     );
     return isset($subjects[$source]) ? $subjects[$source] : 'Bienvenue — SaisonArt';
 }
@@ -217,6 +219,13 @@ function sa_get_welcome_html($email, $source, $data, $settings) {
                   . '<p>Nous avons bien reçu votre demande. Un membre de la galerie vous confirmera un créneau par email dans les prochaines 24 heures.</p>'
                   . '<p>L\'échange dure environ 20 minutes et est entièrement gratuit.</p>'
                   . '<p style="text-align:center;padding:16px 0;"><a href="' . esc_url($shop_url) . '" style="' . $btn . '">Découvrir nos œuvres</a></p>';
+            break;
+
+        case 'contact':
+            $body = '<h2 style="font-family:\'Playfair Display\',Georgia,serif;color:#2C3D35;font-size:24px;">Merci pour votre message</h2>'
+                  . '<p>Nous avons bien reçu votre demande et vous répondrons dans les 24 à 48 heures.</p>'
+                  . '<p>En attendant, n\'hésitez pas à parcourir notre collection :</p>'
+                  . '<p style="text-align:center;padding:16px 0;"><a href="' . esc_url($shop_url) . '" style="' . $btn . '">Découvrir la boutique</a></p>';
             break;
 
         case 'newsletter':

@@ -49,6 +49,17 @@ function saisonart_enqueue_styles() {
         wp_enqueue_script('saisonart-conseil', get_stylesheet_directory_uri() . '/assets/js/conseil.js', array(), $version, true);
     }
 
+    // Blog / Magazine styles
+    if (is_home() || is_singular('post') || (is_archive() && !is_post_type_archive('product') && !is_tax('product_cat') && !is_tax('product_tag'))) {
+        wp_enqueue_style('saisonart-blog', get_stylesheet_directory_uri() . '/assets/css/blog.css', array('saisonart-main'), $version);
+    }
+
+    // Contact page styles
+    if (is_page_template('page-contact-us.php') || is_page('contact-us')) {
+        wp_enqueue_style('saisonart-contact', get_stylesheet_directory_uri() . '/assets/css/contact.css', array('saisonart-main'), $version);
+        wp_enqueue_script('saisonart-contact', get_stylesheet_directory_uri() . '/assets/js/contact.js', array(), $version, true);
+    }
+
     // Boutique & product page styles
     if (is_shop() || is_product_category() || is_product_tag() || is_product()) {
         wp_enqueue_style('saisonart-boutique', get_stylesheet_directory_uri() . '/assets/css/boutique.css', array('saisonart-main'), $version);
