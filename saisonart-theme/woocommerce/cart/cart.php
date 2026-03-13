@@ -4,6 +4,7 @@
  * Dark card-based layout matching the gallery aesthetic.
  *
  * @see https://woocommerce.com/document/template-structure/
+ * @version 7.9.0
  */
 defined('ABSPATH') || exit;
 
@@ -120,10 +121,29 @@ do_action('woocommerce_before_cart'); ?>
         <?php endforeach; ?>
 
         <?php if (WC()->cart->needs_shipping() && WC()->cart->show_shipping()) : ?>
-          <div class="sa-cart-totals-row">
-            <span>Livraison</span>
-            <span><?php wc_cart_totals_shipping_html(); ?></span>
-          </div>
+          <?php
+          $sa_shipping = WC()->shipping();
+          $packages = $sa_shipping ? $sa_shipping->get_packages() : array();
+          if (!empty($packages)) :
+              foreach ($packages as $i => $package) {
+                  $chosen_method = isset(WC()->session->chosen_shipping_methods[$i]) ? WC()->session->chosen_shipping_methods[$i] : '';
+                  $available     = isset($package['rates']) ? $package['rates'] : array();
+                  if ($available) {
+                      $rate = $chosen_method && isset($available[$chosen_method]) ? $available[$chosen_method] : reset($available);
+                      ?>
+                      <div class="sa-cart-totals-row">
+                        <span>Livraison</span>
+                        <span><?php echo wp_kses_post($rate->get_label()); ?><?php if ($rate->cost > 0) : ?> — <?php echo wc_price($rate->cost); ?><?php else : ?> — Offerte<?php endif; ?></span>
+                      </div>
+                      <?php
+                  }
+              }
+          else : ?>
+              <div class="sa-cart-totals-row">
+                <span>Livraison</span>
+                <span>Calculée à l'étape suivante</span>
+              </div>
+          <?php endif; ?>
         <?php endif; ?>
 
         <?php foreach (WC()->cart->get_fees() as $fee) : ?>
@@ -158,10 +178,8 @@ do_action('woocommerce_before_cart'); ?>
       <svg viewBox="0 0 24 24" width="14" height="14"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
       Continuer mes achats
     </a>
-
-    <?php do_action('woocommerce_after_cart'); ?>
   </aside>
 
 </div>
 
-<?php do_action('woocommerce_before_cart_collaterals'); ?>
+<?php do_action('woocommerce_after_cart'); ?>

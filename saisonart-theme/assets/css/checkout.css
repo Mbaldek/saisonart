@@ -400,8 +400,10 @@ body.woocommerce-account .entry-content {
 }
 
 /* Trust badges (hooked via woocommerce_after_cart) */
-.sa-cart-sidebar .sa-checkout-trust {
-  margin-top: 8px;
+.sa-cart-wrap + .sa-checkout-trust {
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid var(--sa-border);
 }
 
 /* ── Responsive ─────────────────────────── */
@@ -789,6 +791,38 @@ body.woocommerce-account .entry-content {
     padding: 12px 10px !important;
     font-size: 13px !important;
   }
+}
+
+/* ── Empty cart ────────────────────────── */
+.woocommerce-cart .cart-empty {
+  text-align: center;
+  font-family: var(--sa-font-h);
+  font-size: 20px;
+  color: rgba(255,255,255,.6);
+  padding: 60px 0 20px;
+}
+.woocommerce-cart .return-to-shop {
+  text-align: center;
+  padding-bottom: 60px;
+}
+.woocommerce-cart .return-to-shop .button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--sa-accent) !important;
+  color: #fff !important;
+  border: none !important;
+  border-radius: 999px !important;
+  padding: 14px 32px !important;
+  font-family: var(--sa-font-b) !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  text-decoration: none !important;
+  transition: background .25s, transform .2s !important;
+}
+.woocommerce-cart .return-to-shop .button:hover {
+  background: #7a5234 !important;
+  transform: translateY(-1px) !important;
 }
 
 /* ═══════════════════════════════════════════

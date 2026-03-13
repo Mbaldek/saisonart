@@ -263,11 +263,49 @@ function saisonart_open_graph() {
 }
 
 /* --------------------------------------------------------------------------
-   SEO: Twitter Card tags
+   SEO: Twitter Card tags (full)
    -------------------------------------------------------------------------- */
 add_action('wp_head', 'saisonart_twitter_cards', 3);
 function saisonart_twitter_cards() {
     echo '<meta name="twitter:card" content="summary_large_image">' . "\n";
+
+    if (is_front_page()) {
+        $title = 'SaisonArt — Galerie d\'art en ligne';
+        $desc  = 'Peintures originales de maîtres français XIXe-XXe siècle. Expertisées, certifiées, livrées sous 48 h.';
+        $image = get_stylesheet_directory_uri() . '/assets/images/og-saisonart.jpg';
+    } elseif (is_singular('product')) {
+        $product = wc_get_product(get_the_ID());
+        $title = $product ? $product->get_name() . ' | SaisonArt' : get_the_title();
+        $desc  = $product ? wp_trim_words(wp_strip_all_tags($product->get_short_description()), 20) : '';
+        $image_id = $product ? $product->get_image_id() : 0;
+        $image = $image_id ? wp_get_attachment_url($image_id) : '';
+    } elseif (is_singular('post')) {
+        $title = get_the_title() . ' | Magazine SaisonArt';
+        $desc  = wp_trim_words(wp_strip_all_tags(get_the_excerpt()), 20);
+        $image = get_the_post_thumbnail_url(get_the_ID(), 'large') ?: '';
+    } else {
+        $title = wp_get_document_title();
+        $desc  = get_bloginfo('description');
+        $image = get_stylesheet_directory_uri() . '/assets/images/og-saisonart.jpg';
+    }
+
+    if (!empty($title)) echo '<meta name="twitter:title" content="' . esc_attr($title) . '">' . "\n";
+    if (!empty($desc))  echo '<meta name="twitter:description" content="' . esc_attr($desc) . '">' . "\n";
+    if (!empty($image)) echo '<meta name="twitter:image" content="' . esc_url($image) . '">' . "\n";
+}
+
+/* --------------------------------------------------------------------------
+   SEO: noindex on checkout funnel & theme-color
+   -------------------------------------------------------------------------- */
+add_action('wp_head', 'saisonart_meta_extras', 1);
+function saisonart_meta_extras() {
+    // Theme color for mobile browsers
+    echo '<meta name="theme-color" content="#0d1610">' . "\n";
+
+    // noindex checkout funnel pages
+    if (function_exists('is_cart') && (is_cart() || is_checkout() || is_account_page())) {
+        echo '<meta name="robots" content="noindex, nofollow">' . "\n";
+    }
 }
 
 /* --------------------------------------------------------------------------
@@ -575,6 +613,70 @@ function saisonart_remove_storefront_actions() {
 
     // Remove Storefront inline customizer CSS that injects background-color on body
     remove_action('wp_enqueue_scripts', 'storefront_add_customizer_css', 130);
+}
+
+/* --------------------------------------------------------------------------
+   WooCommerce: Force classic shortcode cart/checkout (not block-based)
+   WC 8+ defaults to React blocks which bypass our PHP template overrides.
+   This replaces block rendering with classic shortcodes so cart.php works.
+   -------------------------------------------------------------------------- */
+// 1) Replace block HTML with classic shortcode output
+add_filter('render_block', 'saisonart_classic_cart_checkout', 10, 2);
+function saisonart_classic_cart_checkout($block_content, $block) {
+    static $rendering = false;
+    if ($rendering) {
+        return '';
+    }
+    if ($block['blockName'] === 'woocommerce/cart') {
+        $rendering = true;
+        $out = do_shortcode('[woocommerce_cart]');
+        $rendering = false;
+        return $out;
+    }
+    if ($block['blockName'] === 'woocommerce/checkout') {
+        $rendering = true;
+        $out = do_shortcode('[woocommerce_checkout]');
+        $rendering = false;
+        return $out;
+    }
+    return $block_content;
+}
+
+// 2) Dequeue WC block scripts/styles — they crash when the React blocks are replaced
+add_action('wp_enqueue_scripts', 'saisonart_dequeue_wc_blocks', 99);
+function saisonart_dequeue_wc_blocks() {
+    if (!(function_exists('is_cart') && is_cart()) && !(function_exists('is_checkout') && is_checkout())) {
+        return;
+    }
+    // Remove all WC block scripts by pattern
+    global $wp_scripts, $wp_styles;
+    if (isset($wp_scripts->registered)) {
+        foreach ($wp_scripts->registered as $handle => $script) {
+            if (
+                strpos($handle, 'wc-blocks') !== false ||
+                strpos($handle, 'wc-cart') !== false ||
+                strpos($handle, 'wc-checkout') !== false ||
+                strpos($handle, 'WCPAY_BLOCKS') !== false ||
+                strpos($handle, 'wc-cart-checkout') !== false
+            ) {
+                wp_dequeue_script($handle);
+                wp_deregister_script($handle);
+            }
+        }
+    }
+    // Remove block styles
+    if (isset($wp_styles->registered)) {
+        foreach ($wp_styles->registered as $handle => $style) {
+            if (
+                strpos($handle, 'wc-blocks') !== false ||
+                strpos($handle, 'wc-cart') !== false ||
+                strpos($handle, 'wc-checkout') !== false
+            ) {
+                wp_dequeue_style($handle);
+                wp_deregister_style($handle);
+            }
+        }
+    }
 }
 
 /* --------------------------------------------------------------------------
