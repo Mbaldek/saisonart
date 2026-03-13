@@ -243,6 +243,15 @@ body.tax-product_cat .woocommerce-result-count { display: none !important; }
   list-style: none !important;
 }
 
+/* Kill Storefront clearfix pseudo-elements — they become ghost grid items */
+.woocommerce ul.products::before,
+.woocommerce ul.products::after,
+.woocommerce-page ul.products::before,
+.woocommerce-page ul.products::after {
+  display: none !important;
+  content: none !important;
+}
+
 /* ── Product Card ────────────────────────────────────────── */
 /* Kill ALL Storefront li.product defaults */
 .woocommerce ul.products li.product,
