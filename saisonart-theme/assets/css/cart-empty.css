@@ -1,0 +1,476 @@
+/* ════════════════════════════════════════════════════════════
+   SAISONART — Page Panier Vide (cart-empty) v2
+   Breakpoint mobile : 768px
+   Utilise les tokens du thème définis dans main.css
+════════════════════════════════════════════════════════════ */
+
+
+/* ─ Tokens locaux complémentaires ─ */
+.woocommerce-cart .cart-empty,
+.woocommerce-cart.woocommerce-page {
+  --sa-accent-h:    #9d6e4a;
+  --sa-accent-light:rgba(139,94,60,0.15);
+  --sa-white:       #ffffff;
+  --sa-muted:       rgba(255,255,255,0.45);
+  --sa-sub:         rgba(255,255,255,0.70);
+  --sa-border-acc:  rgba(139,94,60,0.35);
+  --sa-radius:      14px;
+}
+
+
+/* ════════════════════════════════════════════════════════════
+   1. BUG FIXES — Éléments mal positionnés sur la page panier
+════════════════════════════════════════════════════════════ */
+
+/* Fix "Modifier" / .showcoupon flottant hors du layout */
+.woocommerce-cart .showcoupon {
+  position: static !important;
+  display: inline !important;
+  float: none !important;
+  left: auto !important;
+  bottom: auto !important;
+}
+
+/* Fix icône ⓘ orpheline (notice vide) */
+.woocommerce-cart .woocommerce-info:empty,
+.woocommerce-cart ul.woocommerce-error:empty,
+.woocommerce-cart .woocommerce-message:empty {
+  display: none !important;
+}
+
+/* Supprimer tout padding/margin résiduel du layout panier vide */
+.woocommerce-cart .woocommerce {
+  padding: 0 !important;
+  margin: 0 !important;
+  max-width: 100% !important;
+  width: 100% !important;
+}
+
+/* Masquer le titre "Panier" natif WooCommerce — remplacé par notre hero */
+.woocommerce-cart .woocommerce-cart-empty-page-title,
+.woocommerce-cart h1.page-title,
+.woocommerce-cart h1.entry-title {
+  display: none !important;
+}
+
+/* Masquer le paragraphe .cart-empty et le bouton return natifs */
+.woocommerce-cart p.cart-empty,
+.woocommerce-cart .return-to-shop {
+  display: none !important;
+}
+
+
+/* ════════════════════════════════════════════════════════════
+   2. HERO PANIER VIDE — Layout 2 colonnes
+════════════════════════════════════════════════════════════ */
+
+.sa-cart-hero {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 80px !important;
+  align-items: center !important;
+  max-width: 1280px !important;
+  margin: 0 auto !important;
+  padding: 80px 48px 64px !important;
+}
+
+/* ── Colonne gauche : message éditorial ── */
+.sa-cart-hero__left {}
+
+.sa-cart-eyebrow {
+  display: flex !important;
+  align-items: center !important;
+  gap: 14px !important;
+  font-size: 10px !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.16em !important;
+  text-transform: uppercase !important;
+  color: var(--sa-accent) !important;
+  margin-bottom: 20px !important;
+}
+.sa-cart-eyebrow::before {
+  content: '' !important;
+  display: block !important;
+  width: 32px !important;
+  height: 1px !important;
+  background: var(--sa-accent) !important;
+  flex-shrink: 0 !important;
+}
+
+.sa-cart-title {
+  font-family: var(--sa-font-h), serif !important;
+  font-size: 52px !important;
+  font-weight: 700 !important;
+  line-height: 1.1 !important;
+  letter-spacing: -0.02em !important;
+  margin-bottom: 16px !important;
+  color: var(--sa-white) !important;
+}
+.sa-cart-title em {
+  font-style: italic !important;
+  color: var(--sa-accent) !important;
+  font-weight: 400 !important;
+}
+
+.sa-cart-subtitle {
+  font-size: 16px !important;
+  color: var(--sa-sub) !important;
+  line-height: 1.75 !important;
+  margin-bottom: 36px !important;
+  max-width: 440px !important;
+}
+
+.sa-cart-ctas {
+  display: flex !important;
+  gap: 12px !important;
+  flex-wrap: wrap !important;
+  align-items: center !important;
+}
+
+/* Bouton principal */
+.sa-cart-ctas .sa-btn-primary {
+  background: var(--sa-accent) !important;
+  color: var(--sa-white) !important;
+  border: none !important;
+  padding: 15px 32px !important;
+  border-radius: 50px !important;
+  font-family: var(--sa-font-b), sans-serif !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.08em !important;
+  text-transform: uppercase !important;
+  cursor: pointer !important;
+  text-decoration: none !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  transition: background 0.2s ease, transform 0.15s ease !important;
+}
+.sa-cart-ctas .sa-btn-primary:hover {
+  background: var(--sa-accent-h) !important;
+  transform: translateY(-1px) !important;
+}
+
+/* Bouton secondaire */
+.sa-cart-ctas .sa-btn-ghost {
+  background: transparent !important;
+  color: var(--sa-sub) !important;
+  border: 1px solid var(--sa-border) !important;
+  padding: 14px 28px !important;
+  border-radius: 50px !important;
+  font-family: var(--sa-font-b), sans-serif !important;
+  font-size: 13px !important;
+  cursor: pointer !important;
+  text-decoration: none !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  transition: border-color 0.2s, color 0.2s !important;
+}
+.sa-cart-ctas .sa-btn-ghost:hover {
+  border-color: var(--sa-border-acc) !important;
+  color: var(--sa-white) !important;
+}
+
+/* ── Colonne droite : illustration cadre vide ── */
+.sa-cart-hero__right {
+  position: relative !important;
+  height: 340px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  overflow: hidden !important;
+}
+
+.sa-empty-frame {
+  position: relative !important;
+  width: 260px !important;
+  height: 220px !important;
+}
+.sa-frame-outer {
+  position: absolute !important;
+  inset: 0 !important;
+  border: 2px solid var(--sa-border-acc) !important;
+  border-radius: 4px !important;
+}
+.sa-frame-inner {
+  position: absolute !important;
+  inset: 12px !important;
+  border: 1px solid rgba(139,94,60,0.2) !important;
+  border-radius: 2px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-direction: column !important;
+  gap: 14px !important;
+  background: rgba(13,22,16,0.4) !important;
+}
+.sa-frame-inner-icon {
+  font-size: 36px !important;
+  opacity: 0.3 !important;
+  line-height: 1 !important;
+}
+.sa-frame-inner-text {
+  font-family: var(--sa-font-h), serif !important;
+  font-size: 13px !important;
+  font-style: italic !important;
+  color: var(--sa-muted) !important;
+  text-align: center !important;
+  line-height: 1.6 !important;
+}
+.sa-frame-hook {
+  position: absolute !important;
+  top: -28px !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  width: 1px !important;
+  height: 28px !important;
+  background: var(--sa-border-acc) !important;
+}
+.sa-frame-hook::before {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: -4px !important;
+  width: 9px !important;
+  height: 9px !important;
+  border-radius: 50% !important;
+  border: 1px solid var(--sa-border-acc) !important;
+}
+.sa-frame-shadow {
+  position: absolute !important;
+  bottom: -18px !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  width: 180px !important;
+  height: 8px !important;
+  background: radial-gradient(ellipse, rgba(0,0,0,0.3) 0%, transparent 70%) !important;
+}
+.sa-deco-char {
+  position: absolute !important;
+  font-family: var(--sa-font-h), serif !important;
+  font-size: 220px !important;
+  font-weight: 700 !important;
+  color: rgba(255,255,255,0.025) !important;
+  line-height: 1 !important;
+  right: -10px !important;
+  top: -20px !important;
+  pointer-events: none !important;
+  user-select: none !important;
+}
+
+
+/* ════════════════════════════════════════════════════════════
+   3. TRUST STRIP — 4 garanties horizontales
+════════════════════════════════════════════════════════════ */
+
+.sa-cart-trust {
+  background: var(--sa-darker) !important;
+  border-top: 1px solid var(--sa-border) !important;
+  border-bottom: 1px solid var(--sa-border) !important;
+  padding: 28px 48px !important;
+}
+.sa-cart-trust__inner {
+  max-width: 1280px !important;
+  margin: 0 auto !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-around !important;
+}
+.sa-cart-trust .sa-trust-item {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  padding: 0 24px !important;
+  border-right: 1px solid var(--sa-border) !important;
+}
+.sa-cart-trust .sa-trust-item:last-child {
+  border-right: none !important;
+}
+.sa-trust-item__icon {
+  font-size: 22px !important;
+  flex-shrink: 0 !important;
+  line-height: 1 !important;
+}
+.sa-trust-item__label {
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  color: var(--sa-white) !important;
+  line-height: 1.3 !important;
+}
+.sa-trust-item__desc {
+  font-size: 11px !important;
+  color: var(--sa-muted) !important;
+  margin-top: 2px !important;
+}
+
+
+/* ════════════════════════════════════════════════════════════
+   4. SECTION RECOMMANDATIONS — Grille 4 cartes
+════════════════════════════════════════════════════════════ */
+
+.sa-cart-reco {
+  max-width: 1280px !important;
+  margin: 0 auto !important;
+  padding: 56px 48px 80px !important;
+}
+
+.sa-cart-reco__header {
+  display: flex !important;
+  align-items: flex-end !important;
+  justify-content: space-between !important;
+  margin-bottom: 32px !important;
+  flex-wrap: wrap !important;
+  gap: 16px !important;
+}
+.sa-cart-reco__title {
+  font-family: var(--sa-font-h), serif !important;
+  font-size: 26px !important;
+  font-weight: 600 !important;
+  line-height: 1.2 !important;
+  color: var(--sa-white) !important;
+  margin: 0 0 4px !important;
+}
+.sa-cart-reco__subtitle {
+  font-size: 13px !important;
+  color: var(--sa-muted) !important;
+}
+.sa-cart-reco__link {
+  font-size: 13px !important;
+  color: var(--sa-accent) !important;
+  text-decoration: none !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  flex-shrink: 0 !important;
+  transition: gap 0.2s !important;
+  white-space: nowrap !important;
+}
+.sa-cart-reco__link:hover { gap: 10px !important; }
+
+/* Grille produits */
+.sa-cart-reco .sa-reco-grid {
+  display: grid !important;
+  grid-template-columns: repeat(4, 1fr) !important;
+  gap: 20px !important;
+}
+
+/* Cartes produit */
+.sa-cart-reco .sa-reco-grid li.product,
+.sa-cart-reco .sa-reco-grid .sa-art-card {
+  background: var(--sa-darker) !important;
+  border: 1px solid var(--sa-border) !important;
+  border-radius: var(--sa-radius) !important;
+  overflow: hidden !important;
+  transition: border-color 0.2s, transform 0.2s !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  float: none !important;
+  list-style: none !important;
+}
+.sa-cart-reco .sa-reco-grid li.product:hover,
+.sa-cart-reco .sa-reco-grid .sa-art-card:hover {
+  border-color: var(--sa-border-acc) !important;
+  transform: translateY(-3px) !important;
+}
+.sa-cart-reco .sa-reco-grid li.product img {
+  width: 100% !important;
+  display: block !important;
+  aspect-ratio: 4/3 !important;
+  object-fit: cover !important;
+  border-radius: 0 !important;
+}
+.sa-cart-reco .sa-reco-grid li.product .woocommerce-loop-product__title {
+  font-family: var(--sa-font-h), serif !important;
+  font-size: 15px !important;
+  font-weight: 600 !important;
+  color: var(--sa-white) !important;
+  padding: 14px 16px 4px !important;
+  line-height: 1.3 !important;
+}
+.sa-cart-reco .sa-reco-grid li.product .price {
+  padding: 4px 16px 14px !important;
+  font-size: 16px !important;
+  color: var(--sa-accent) !important;
+  background: transparent !important;
+  border: none !important;
+  margin: 0 !important;
+}
+.sa-cart-reco .sa-reco-grid li.product .price .woocommerce-Price-amount {
+  color: var(--sa-accent) !important;
+  font-family: var(--sa-font-h), serif !important;
+  font-size: 17px !important;
+}
+/* Masquer bouton add-to-cart sur la grille reco */
+.sa-cart-reco .sa-reco-grid li.product .button {
+  display: none !important;
+}
+
+
+/* ════════════════════════════════════════════════════════════
+   5. RESPONSIVE — 768px
+════════════════════════════════════════════════════════════ */
+
+@media (max-width: 768px) {
+
+  .sa-cart-hero {
+    grid-template-columns: 1fr !important;
+    gap: 48px !important;
+    padding: 48px 20px 40px !important;
+  }
+
+  .sa-cart-hero__right {
+    height: 240px !important;
+    order: -1 !important; /* Illustration en haut sur mobile */
+  }
+
+  .sa-cart-title {
+    font-size: 36px !important;
+  }
+
+  .sa-cart-subtitle {
+    font-size: 15px !important;
+    max-width: 100% !important;
+  }
+
+  .sa-cart-trust {
+    padding: 20px !important;
+  }
+  .sa-cart-trust__inner {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 16px !important;
+  }
+  .sa-cart-trust .sa-trust-item {
+    padding: 0 !important;
+    border-right: none !important;
+  }
+
+  .sa-cart-reco {
+    padding: 40px 20px 60px !important;
+  }
+
+  .sa-cart-reco .sa-reco-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  .sa-empty-frame {
+    width: 200px !important;
+    height: 170px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .sa-cart-reco .sa-reco-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .sa-cart-ctas {
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+  .sa-cart-ctas .sa-btn-primary,
+  .sa-cart-ctas .sa-btn-ghost {
+    justify-content: center !important;
+  }
+}

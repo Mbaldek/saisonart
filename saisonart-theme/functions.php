@@ -1021,3 +1021,200 @@ function sav2_mobile_bar() {
 add_filter('woocommerce_add_to_cart_redirect', function () {
     return wc_get_cart_url();
 });
+
+/* ══════════════════════════════════════════════════════════════
+   Cart Empty v2 — Hero éditorial + trust strip + recommandations
+   ══════════════════════════════════════════════════════════════ */
+
+/* Enqueue cart-empty CSS */
+add_action('wp_enqueue_scripts', function () {
+    if (is_cart()) {
+        $version = filemtime(get_stylesheet_directory() . '/assets/css/cart-empty.css');
+        wp_enqueue_style(
+            'saisonart-cart-empty',
+            get_stylesheet_directory_uri() . '/assets/css/cart-empty.css',
+            array('saisonart-main'),
+            $version
+        );
+    }
+});
+
+/* Hook principal — Injecter le hero + trust + reco quand le panier est vide */
+add_action('woocommerce_cart_is_empty', 'saison_cart_empty_content', 5);
+
+function saison_cart_empty_content() {
+
+    $shop_url    = get_permalink(wc_get_page_id('shop'));
+    $contact_url = saison_get_contact_url();
+    ?>
+
+    <!-- HERO ÉDITORIAL -->
+    <div class="sa-cart-hero">
+
+        <div class="sa-cart-hero__left">
+            <div class="sa-cart-eyebrow">Votre sélection</div>
+
+            <h1 class="sa-cart-title">
+                Votre panier<br>attend une <em>œuvre</em>
+            </h1>
+
+            <p class="sa-cart-subtitle">
+                Chaque tableau que vous ajoutez raconte quelque chose de vous.
+                Prenez le temps de choisir — nos experts sont là pour vous guider.
+            </p>
+
+            <div class="sa-cart-ctas">
+                <a href="<?php echo esc_url($shop_url); ?>" class="sa-btn-primary">
+                    Découvrir la boutique →
+                </a>
+                <a href="<?php echo esc_url($contact_url); ?>" class="sa-btn-ghost">
+                    💬 Parler à un expert
+                </a>
+            </div>
+        </div>
+
+        <div class="sa-cart-hero__right">
+            <div class="sa-deco-char">∅</div>
+            <div class="sa-empty-frame">
+                <div class="sa-frame-hook"></div>
+                <div class="sa-frame-outer"></div>
+                <div class="sa-frame-inner">
+                    <div class="sa-frame-inner-icon">🖼</div>
+                    <div class="sa-frame-inner-text">
+                        Votre prochaine<br>acquisition vous attend
+                    </div>
+                </div>
+                <div class="sa-frame-shadow"></div>
+            </div>
+        </div>
+
+    </div>
+
+    <?php
+    saison_cart_trust_strip();
+    saison_cart_recommendations();
+}
+
+/* Trust strip — 4 garanties */
+function saison_cart_trust_strip() {
+    $items = array(
+        array('icon' => '📄', 'label' => 'Certifiées authentiques',  'desc' => 'Chaque œuvre est expertisée'),
+        array('icon' => '🚚', 'label' => 'Livraison offerte',        'desc' => 'Emballage muséal sécurisé'),
+        array('icon' => '↩️',  'label' => 'Retour 14 jours',          'desc' => 'Satisfait ou remboursé'),
+        array('icon' => '💬', 'label' => 'Conseil expert',            'desc' => 'Réponse en moins de 4h'),
+    );
+    ?>
+    <div class="sa-cart-trust">
+        <div class="sa-cart-trust__inner">
+            <?php foreach ($items as $item) : ?>
+                <div class="sa-trust-item">
+                    <span class="sa-trust-item__icon"><?php echo $item['icon']; ?></span>
+                    <div>
+                        <div class="sa-trust-item__label"><?php echo esc_html($item['label']); ?></div>
+                        <div class="sa-trust-item__desc"><?php echo esc_html($item['desc']); ?></div>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        </div>
+    </div>
+    <?php
+}
+
+/* Recommandations — Grille 4 produits (featured > récents) */
+function saison_cart_recommendations() {
+
+    $args = array(
+        'post_type'      => 'product',
+        'post_status'    => 'publish',
+        'posts_per_page' => 4,
+        'orderby'        => 'rand',
+        'tax_query'      => array(
+            array(
+                'taxonomy' => 'product_visibility',
+                'field'    => 'name',
+                'terms'    => 'featured',
+            ),
+        ),
+    );
+
+    $query = new WP_Query($args);
+
+    if ($query->post_count < 4) {
+        $args_fallback = array(
+            'post_type'      => 'product',
+            'post_status'    => 'publish',
+            'posts_per_page' => 4,
+            'orderby'        => 'date',
+            'order'          => 'DESC',
+        );
+        $query = new WP_Query($args_fallback);
+    }
+
+    if (!$query->have_posts()) return;
+
+    $shop_url = get_permalink(wc_get_page_id('shop'));
+    ?>
+
+    <div class="sa-cart-reco">
+        <div class="sa-cart-reco__header">
+            <div>
+                <h2 class="sa-cart-reco__title">Œuvres qui pourraient vous inspirer</h2>
+                <p class="sa-cart-reco__subtitle">Sélectionnées par nos experts · Disponibles immédiatement</p>
+            </div>
+            <a href="<?php echo esc_url($shop_url); ?>" class="sa-cart-reco__link">
+                Voir toute la boutique →
+            </a>
+        </div>
+
+        <ul class="sa-reco-grid products">
+            <?php while ($query->have_posts()) : $query->the_post(); ?>
+                <?php
+                $product     = wc_get_product(get_the_ID());
+                $price_html  = $product ? $product->get_price_html() : '';
+                $product_url = get_permalink();
+                $img         = has_post_thumbnail()
+                               ? get_the_post_thumbnail(get_the_ID(), 'woocommerce_thumbnail')
+                               : '<div style="aspect-ratio:4/3;background:var(--sa-darker);display:flex;align-items:center;justify-content:center;font-size:28px;opacity:0.25;">🖼</div>';
+
+                $terms    = get_the_terms(get_the_ID(), 'product_cat');
+                $cat_name = (!empty($terms) && !is_wp_error($terms)) ? $terms[0]->name : '';
+                ?>
+                <li class="product">
+                    <a href="<?php echo esc_url($product_url); ?>">
+                        <?php echo $img; ?>
+                        <?php if ($cat_name) : ?>
+                            <div style="padding:12px 16px 0;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--sa-accent);">
+                                <?php echo esc_html($cat_name); ?>
+                            </div>
+                        <?php endif; ?>
+                        <h3 class="woocommerce-loop-product__title">
+                            <?php the_title(); ?>
+                        </h3>
+                        <div class="price"><?php echo wp_kses_post($price_html); ?></div>
+                    </a>
+                </li>
+            <?php endwhile; wp_reset_postdata(); ?>
+        </ul>
+    </div>
+
+    <?php
+}
+
+/* URL page contact avec sujet pré-rempli */
+function saison_get_contact_url($subject = '') {
+    $contact_page = get_page_by_path('contact');
+    $url = $contact_page ? get_permalink($contact_page->ID) : home_url('/contact/');
+    if ($subject) {
+        $url = add_query_arg('sujet', urlencode($subject), $url);
+    }
+    return $url;
+}
+
+/* Filtrer les notices WooCommerce vides (corrige icône ⓘ orpheline) */
+add_filter('woocommerce_add_message', 'saison_filter_empty_notices');
+add_filter('woocommerce_add_error',   'saison_filter_empty_notices');
+add_filter('woocommerce_add_notice',  'saison_filter_empty_notices');
+
+function saison_filter_empty_notices($message) {
+    return trim($message) ? $message : '';
+}
