@@ -12,9 +12,19 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Deploy via SFTP
+      - name: Explore remote directories
         run: |
           sudo apt-get update && sudo apt-get install -y lftp
+          lftp -u "${{ secrets.SFTP_USER }},${{ secrets.SFTP_PASSWORD }}" \
+            -e "set sftp:auto-confirm yes; \
+                ls /; \
+                ls /srv/htdocs/; \
+                ls /srv/htdocs/wp-content/themes/; \
+                quit" \
+            sftp://${{ secrets.SFTP_HOST }}
+
+      - name: Deploy via SFTP
+        run: |
           lftp -u "${{ secrets.SFTP_USER }},${{ secrets.SFTP_PASSWORD }}" \
             -e "set sftp:auto-confirm yes; \
                 mirror --reverse --delete --verbose \
