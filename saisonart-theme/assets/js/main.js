@@ -8,7 +8,7 @@
     if (!header) return;
 
     function update() {
-      header.classList.toggle('is-scrolled', window.scrollY > 60);
+      header.classList.toggle('scrolled', window.scrollY > 40);
     }
     window.addEventListener('scroll', update, { passive: true });
     update();
@@ -16,61 +16,135 @@
 
   /* ── Mobile burger menu ─────────────────────────────────── */
   function initBurger() {
-    var burger = document.querySelector('.sa-header__burger');
-    var menu = document.querySelector('.sa-header__mobile-menu');
+    var burger = document.querySelector('.sa-header-burger');
+    var menu = document.querySelector('.sa-header-mobile-menu');
     if (!burger || !menu) return;
 
     burger.addEventListener('click', function () {
       menu.classList.toggle('is-open');
+      burger.classList.toggle('is-open');
     });
 
-    // Close on link click
     menu.querySelectorAll('a').forEach(function (link) {
       link.addEventListener('click', function () {
         menu.classList.remove('is-open');
+        burger.classList.remove('is-open');
       });
     });
   }
 
   /* ── Scroll reveal ──────────────────────────────────────── */
   function initScrollReveal() {
-    var elements = document.querySelectorAll('.sa-reveal, .sa-reveal-fade, .sa-reveal-scale');
+    var elements = document.querySelectorAll('.reveal');
     if (!elements.length) return;
 
     var observer = new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
         if (entry.isIntersecting) {
-          entry.target.classList.add('is-visible');
+          entry.target.classList.add('visible');
           observer.unobserve(entry.target);
         }
       });
-    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+    }, { threshold: 0.12 });
 
     elements.forEach(function (el) {
       observer.observe(el);
     });
   }
 
-  /* ── Auto-tag animatable elements ───────────────────────── */
-  function tagAnimatedElements() {
-    document.querySelectorAll(
-      '.woocommerce ul.products li.product, ' +
-      '.sa-feature, ' +
-      '.sa-section-header'
-    ).forEach(function (el) {
-      if (!el.classList.contains('sa-reveal')) {
-        el.classList.add('sa-reveal');
-      }
+  /* ── Stack carousel (homepage only) ─────────────────────── */
+  function initStackCarousel() {
+    var stack = document.getElementById('saStack');
+    if (!stack) return;
+
+    var cards = Array.from(stack.querySelectorAll('.sa-card'));
+    var dots = document.querySelectorAll('.sa-sel-dot');
+    var currentCard = 0;
+    var autoPlay;
+
+    function updateStack(active) {
+      var total = cards.length;
+      cards.forEach(function (card, i) {
+        var offset = (i - active + total) % total;
+        card.style.zIndex = total - offset;
+        if (offset === 0) {
+          card.style.transform = 'translateX(-50%) translateY(0) rotateY(0deg) scale(1)';
+          card.style.opacity = '1';
+          card.style.left = '50%';
+          card.style.width = '300px';
+        } else if (offset === 1) {
+          card.style.transform = 'translateX(calc(-50% + 190px)) translateY(22px) rotateY(-8deg) scale(.95)';
+          card.style.opacity = '.75';
+          card.style.left = '50%';
+          card.style.width = '280px';
+        } else if (offset === 2) {
+          card.style.transform = 'translateX(calc(-50% + 340px)) translateY(40px) rotateY(-14deg) scale(.9)';
+          card.style.opacity = '.45';
+          card.style.left = '50%';
+          card.style.width = '280px';
+        } else {
+          card.style.transform = 'translateX(calc(-50% - 190px)) translateY(22px) rotateY(8deg) scale(.95)';
+          card.style.opacity = '.75';
+          card.style.left = '50%';
+          card.style.width = '280px';
+        }
+      });
+      dots.forEach(function (d, i) {
+        d.classList.toggle('active', i === active);
+      });
+    }
+
+    function goToCard(i) {
+      currentCard = i;
+      updateStack(i);
+    }
+
+    // Click on card
+    cards.forEach(function (card, i) {
+      card.addEventListener('click', function () {
+        if (i !== currentCard) goToCard(i);
+      });
     });
+
+    // Click on dot
+    dots.forEach(function (dot, i) {
+      dot.addEventListener('click', function () {
+        goToCard(i);
+      });
+    });
+
+    // Auto-rotate
+    function startAutoPlay() {
+      autoPlay = setInterval(function () {
+        currentCard = (currentCard + 1) % cards.length;
+        updateStack(currentCard);
+      }, 3200);
+    }
+
+    stack.addEventListener('mouseenter', function () {
+      clearInterval(autoPlay);
+    });
+    stack.addEventListener('mouseleave', function () {
+      startAutoPlay();
+    });
+
+    updateStack(0);
+    startAutoPlay();
   }
 
-  /* ── Smooth scroll for anchors ──────────────────────────── */
-  function initSmoothScroll() {
-    $('a[href^="#"]').on('click', function (e) {
-      var target = $(this.getAttribute('href'));
-      if (target.length) {
-        e.preventDefault();
-        $('html, body').animate({ scrollTop: target.offset().top - 80 }, 600);
+  /* ── Newsletter placeholder swap ────────────────────────── */
+  function initNewsletter() {
+    var btn = document.querySelector('.sa-nl-btn');
+    if (!btn) return;
+
+    btn.addEventListener('click', function () {
+      var input = document.querySelector('.sa-nl-input');
+      if (input && input.value) {
+        input.value = '';
+        input.placeholder = '✓ Merci — à bientôt dans votre boîte !';
+        setTimeout(function () {
+          input.placeholder = 'votre@email.fr';
+        }, 3000);
       }
     });
   }
@@ -79,8 +153,8 @@
   $(document).ready(function () {
     initHeaderScroll();
     initBurger();
-    tagAnimatedElements();
     initScrollReveal();
-    initSmoothScroll();
+    initStackCarousel();
+    initNewsletter();
   });
 })(jQuery);
