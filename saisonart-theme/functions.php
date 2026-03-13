@@ -1049,8 +1049,17 @@ function sav2_mobile_bar() {
 /* --------------------------------------------------------------------------
    Sales funnel: stay on product page after add-to-cart
    -------------------------------------------------------------------------- */
+add_filter('option_woocommerce_cart_redirect_after_add', function () {
+    return 'no';
+});
 add_filter('woocommerce_add_to_cart_redirect', function () {
-    return wp_get_referer() ?: wc_get_cart_url();
+    if (wp_get_referer()) {
+        return wp_get_referer();
+    }
+    if (!empty($_SERVER['HTTP_REFERER'])) {
+        return esc_url_raw($_SERVER['HTTP_REFERER']);
+    }
+    return false;
 });
 
 /* ══════════════════════════════════════════════════════════════
