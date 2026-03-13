@@ -12,13 +12,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Deploy via rsync
-        uses: burnett01/rsync-deployments@7.0.1
-        with:
-          switches: -avz --delete
-          path: ./
-          remote_path: ${{ secrets.SSH_PATH }}
-          remote_host: ${{ secrets.SSH_HOST }}
-          remote_user: ${{ secrets.SSH_USER }}
-          remote_key: ${{ secrets.SSH_KEY }}
-          exclude: ".git, .github, node_modules"
+      - name: Deploy via SFTP
+        run: |
+          sudo apt-get update && sudo apt-get install -y lftp
+          lftp -u "${{ secrets.SFTP_USER }},${{ secrets.SFTP_PASSWORD }}" \
+            -e "set sftp:auto-confirm yes; \
+                mirror --reverse --delete --verbose \
+                --exclude .git/ --exclude .github/ --exclude node_modules/ \
+                ./saisonart-theme/ ${{ secrets.SFTP_PATH }}; \
+                quit" \
+            sftp://${{ secrets.SFTP_HOST }}
