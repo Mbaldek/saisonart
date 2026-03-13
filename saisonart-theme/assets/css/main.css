@@ -36,6 +36,15 @@
   --sa-max:       1200px;
 }
 
+/* Hide Storefront residual elements we don't use */
+.sa-reassurance,
+.storefront-handheld-footer-bar,
+.site-header,
+.site-footer,
+.storefront-breadcrumb {
+  display: none !important;
+}
+
 /* ── 2. BASE ──────────────────────────────────────────────── */
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
@@ -44,6 +53,13 @@ body {
   font-family: var(--sa-font-b) !important;
   color: var(--sa-text) !important;
   -webkit-font-smoothing: antialiased;
+}
+
+/* Kill Storefront default backgrounds on wrapper divs */
+#page,
+#content,
+.site-content {
+  background: transparent !important;
 }
 
 h1, h2, h3, h4, h5, h6,
@@ -965,5 +981,15 @@ body.woocommerce-account {
 
 /* ── 9. CONTENT OFFSET (header compensation) ──────────────── */
 body:not(.home) #content {
-  padding-top: 20px;
+  padding-top: 0;
+}
+
+/* Storefront may inject padding/margin on #content — kill it everywhere */
+#content {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+#page {
+  padding: 0 !important;
+  margin: 0 !important;
 }
