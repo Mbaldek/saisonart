@@ -12,16 +12,8 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Explore remote directories
-        run: |
-          sudo apt-get update && sudo apt-get install -y lftp
-          lftp -u "${{ secrets.SFTP_USER }},${{ secrets.SFTP_PASSWORD }}" \
-            -e "set sftp:auto-confirm yes; \
-                ls /; \
-                ls /srv/htdocs/; \
-                ls /srv/htdocs/wp-content/themes/; \
-                quit" \
-            sftp://${{ secrets.SFTP_HOST }}
+      - name: Install lftp
+        run: sudo apt-get update && sudo apt-get install -y lftp
 
       - name: Deploy via SFTP
         run: |
@@ -30,5 +22,14 @@ jobs:
                 mirror --reverse --delete --verbose \
                 --exclude .git/ --exclude .github/ --exclude node_modules/ \
                 ./saisonart-theme/ ${{ secrets.SFTP_PATH }}; \
+                quit" \
+            sftp://${{ secrets.SFTP_HOST }}
+
+      - name: Verify deployment
+        run: |
+          lftp -u "${{ secrets.SFTP_USER }},${{ secrets.SFTP_PASSWORD }}" \
+            -e "set sftp:auto-confirm yes; \
+                ls ${{ secrets.SFTP_PATH }}; \
+                cat ${{ secrets.SFTP_PATH }}style.css; \
                 quit" \
             sftp://${{ secrets.SFTP_HOST }}
