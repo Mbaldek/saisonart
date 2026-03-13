@@ -27,11 +27,10 @@
   display: none !important;
 }
 
-/* Fix bandeau "Votre panier est actuellement vide" + icône ⓘ orpheline */
+/* Fix toutes les notices WooCommerce sur la page panier (vide, supprimé, erreurs) */
 .woocommerce-cart .woocommerce-info,
-.woocommerce-cart .woocommerce-info:empty,
-.woocommerce-cart ul.woocommerce-error:empty,
-.woocommerce-cart .woocommerce-message:empty {
+.woocommerce-cart .woocommerce-message,
+.woocommerce-cart .woocommerce-error {
   display: none !important;
 }
 
@@ -46,7 +45,10 @@
 /* Masquer le titre "Panier" natif WooCommerce — remplacé par notre hero */
 .woocommerce-cart .woocommerce-cart-empty-page-title,
 .woocommerce-cart h1.page-title,
-.woocommerce-cart h1.entry-title {
+.woocommerce-cart h1.entry-title,
+.woocommerce-cart .entry-header,
+.woocommerce-cart article.page > .entry-header,
+.woocommerce-cart .woocommerce-products-header__title {
   display: none !important;
 }
 
