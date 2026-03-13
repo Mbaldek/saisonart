@@ -66,27 +66,30 @@
       var total = cards.length;
       cards.forEach(function (card, i) {
         var offset = (i - active + total) % total;
+        var imgEl = card.querySelector('.sa-card-img');
         card.style.zIndex = total - offset;
+        card.style.left = '50%';
         if (offset === 0) {
+          // Active card — morph wider, landscape ratio
           card.style.transform = 'translateX(-50%) translateY(0) rotateY(0deg) scale(1)';
           card.style.opacity = '1';
-          card.style.left = '50%';
-          card.style.width = '300px';
+          card.style.width = '360px';
+          if (imgEl) imgEl.style.paddingTop = '70%';
         } else if (offset === 1) {
-          card.style.transform = 'translateX(calc(-50% + 190px)) translateY(22px) rotateY(-8deg) scale(.95)';
+          card.style.transform = 'translateX(calc(-50% + 200px)) translateY(22px) rotateY(-8deg) scale(.95)';
           card.style.opacity = '.75';
-          card.style.left = '50%';
-          card.style.width = '280px';
+          card.style.width = '260px';
+          if (imgEl) imgEl.style.paddingTop = '85%';
         } else if (offset === 2) {
-          card.style.transform = 'translateX(calc(-50% + 340px)) translateY(40px) rotateY(-14deg) scale(.9)';
+          card.style.transform = 'translateX(calc(-50% + 350px)) translateY(40px) rotateY(-14deg) scale(.9)';
           card.style.opacity = '.45';
-          card.style.left = '50%';
-          card.style.width = '280px';
+          card.style.width = '260px';
+          if (imgEl) imgEl.style.paddingTop = '85%';
         } else {
-          card.style.transform = 'translateX(calc(-50% - 190px)) translateY(22px) rotateY(8deg) scale(.95)';
+          card.style.transform = 'translateX(calc(-50% - 200px)) translateY(22px) rotateY(8deg) scale(.95)';
           card.style.opacity = '.75';
-          card.style.left = '50%';
-          card.style.width = '280px';
+          card.style.width = '260px';
+          if (imgEl) imgEl.style.paddingTop = '85%';
         }
       });
       dots.forEach(function (d, i) {

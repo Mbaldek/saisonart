@@ -10,7 +10,18 @@
 defined('ABSPATH') || exit;
 
 get_header('shop');
-
+?>
+<nav class="sa-breadcrumbs" aria-label="Fil d'Ariane">
+    <?php woocommerce_breadcrumb(array(
+        'delimiter'   => ' <span class="sa-bc-sep">&rsaquo;</span> ',
+        'wrap_before' => '<div class="sa-bc-inner">',
+        'wrap_after'  => '</div>',
+        'before'      => '<span>',
+        'after'       => '</span>',
+        'home'        => 'Accueil',
+    )); ?>
+</nav>
+<?php
 do_action('woocommerce_before_main_content');
 
 if (woocommerce_product_loop()) {

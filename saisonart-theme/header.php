@@ -7,6 +7,9 @@
 <head>
 <meta charset="<?php bloginfo('charset'); ?>">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://i0.wp.com" crossorigin>
 <?php wp_head(); ?>
 </head>
 <body <?php body_class(); ?>>
@@ -18,17 +21,14 @@
 <header class="sa-header <?php echo is_front_page() ? 'sa-header--dark' : 'sa-header--light'; ?>" id="masthead">
   <a href="<?php echo esc_url(home_url('/')); ?>" class="sa-header-logo">
     <?php
-    $logo_id = get_theme_mod('custom_logo');
-    if ($logo_id) {
-        echo wp_get_attachment_image($logo_id, 'full', false, array('alt' => get_bloginfo('name')));
-    } else {
+    $logo_variant = is_front_page() ? 'light' : 'dark';
+    $logo_url = get_stylesheet_directory_uri() . '/assets/images/logo-saisonart-' . $logo_variant . '.svg';
     ?>
-      <img src="https://i0.wp.com/saisonart.com/wp-content/uploads/2025/08/cropped-logo_siteweb-1.jpg?fit=1241%2C124&ssl=1"
-           alt="<?php echo esc_attr(get_bloginfo('name')); ?>">
-    <?php } ?>
+    <img src="<?php echo esc_url($logo_url); ?>"
+         alt="<?php echo esc_attr(get_bloginfo('name')); ?>">
   </a>
 
-  <nav class="sa-nav">
+  <nav class="sa-nav" aria-label="Navigation principale">
     <?php
     $menu_items = array(
         '/boutique/' => 'Boutique',
@@ -64,11 +64,11 @@
 </header>
 
 <!-- Mobile menu -->
-<div class="sa-header-mobile-menu">
+<nav class="sa-header-mobile-menu" aria-label="Menu mobile">
   <a href="<?php echo esc_url(home_url('/boutique/')); ?>">Boutique</a>
   <a href="<?php echo esc_url(home_url('/news/')); ?>">Magazine</a>
   <a href="<?php echo esc_url(home_url('/contact-us/')); ?>">Contact</a>
   <a href="<?php echo esc_url(wc_get_cart_url()); ?>">Panier</a>
-</div>
+</nav>
 
 <div id="content" class="site-content" tabindex="-1">

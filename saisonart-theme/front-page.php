@@ -5,8 +5,17 @@
  */
 get_header(); ?>
 
-<!-- ═══════ 1. HERO — Editorial Mosaic ═══════ -->
+<main id="main">
+
+<!-- ═══════ 1. HERO — Vidéo Background ═══════ -->
 <section class="sa-hero" id="hero">
+  <!-- Vidéo background blurred -->
+  <div class="sa-hero-video">
+    <video autoplay muted loop playsinline preload="none">
+      <source src="<?php echo esc_url(get_stylesheet_directory_uri() . '/assets/images/saisonart-hero.mp4'); ?>" type="video/mp4">
+    </video>
+  </div>
+
   <div class="sa-hero-content">
     <div class="sa-hero-deconum">S</div>
 
@@ -39,38 +48,6 @@ get_header(); ?>
       <div class="sa-hero-meta-sep"></div>
       <span>Retour <strong>14j</strong></span>
     </div>
-  </div>
-
-  <!-- Mosaïque droite — 3 tableaux -->
-  <div class="sa-hero-mosaic">
-    <?php
-    $mosaic_images = array(
-        array(
-            'url' => 'https://i0.wp.com/saisonart.com/wp-content/uploads/2025/09/WhatsApp-Image-2025-09-23-at-16.04.05-2-scaled.jpg?w=800&ssl=1',
-            'alt' => 'Berge du quai d\'Orsay',
-            'label' => 'Pierre Prins · 1876',
-            'class' => 'sa-hero-mosaic-main',
-        ),
-        array(
-            'url' => 'https://i0.wp.com/saisonart.com/wp-content/uploads/2025/09/WhatsApp-Image-2025-09-23-at-16.04.06-scaled.jpg?w=600&ssl=1',
-            'alt' => 'Cathédrale de Rouen',
-            'label' => 'Émile Tatin',
-            'class' => 'sa-hero-mosaic-a',
-        ),
-        array(
-            'url' => 'https://i0.wp.com/saisonart.com/wp-content/uploads/2025/09/WhatsApp-Image-2025-09-23-at-16.04.07-scaled.jpg?w=600&ssl=1',
-            'alt' => 'Port d\'Alger',
-            'label' => 'Louis Taverne',
-            'class' => 'sa-hero-mosaic-b',
-        ),
-    );
-    foreach ($mosaic_images as $img) : ?>
-      <div class="<?php echo esc_attr($img['class']); ?>">
-        <img src="<?php echo esc_url($img['url']); ?>"
-             alt="<?php echo esc_attr($img['alt']); ?>">
-        <div class="sa-mosaic-label"><?php echo esc_html($img['label']); ?></div>
-      </div>
-    <?php endforeach; ?>
   </div>
 </section>
 
@@ -121,7 +98,8 @@ get_header(); ?>
     <div class="sa-card" data-index="<?php echo $i; ?>">
       <div class="sa-card-img">
         <img src="<?php echo esc_url($image_url); ?>"
-             alt="<?php echo esc_attr($product->get_name()); ?>">
+             alt="<?php echo esc_attr($product->get_name() . ($artist ? ' par ' . $artist : '') . ' — peinture originale'); ?>"
+             loading="lazy" decoding="async">
         <div class="sa-card-overlay"></div>
         <div class="sa-card-hover-btn">Voir l'œuvre →</div>
       </div>
@@ -246,7 +224,7 @@ get_header(); ?>
           <article class="sa-mag-featured">
             <a href="<?php the_permalink(); ?>" style="display:block;position:absolute;inset:0">
               <?php if ($thumb) : ?>
-                <img src="<?php echo esc_url($thumb); ?>" alt="<?php the_title_attribute(); ?>">
+                <img src="<?php echo esc_url($thumb); ?>" alt="<?php the_title_attribute(); ?>" loading="lazy" decoding="async">
               <?php endif; ?>
               <div class="sa-mag-featured-overlay"></div>
               <div class="sa-mag-featured-content">
@@ -267,7 +245,7 @@ get_header(); ?>
             <a href="<?php the_permalink(); ?>" style="display:flex;gap:0;text-decoration:none;color:inherit;width:100%">
               <div class="sa-mag-secondary-img">
                 <?php if ($thumb) : ?>
-                  <img src="<?php echo esc_url($thumb); ?>" alt="<?php the_title_attribute(); ?>">
+                  <img src="<?php echo esc_url($thumb); ?>" alt="<?php the_title_attribute(); ?>" loading="lazy" decoding="async">
                 <?php endif; ?>
               </div>
               <div class="sa-mag-secondary-body">
@@ -304,5 +282,7 @@ get_header(); ?>
     <p class="sa-nl-note">Pas de spam. Désabonnement en un clic. Discrétion garantie.</p>
   </div>
 </section>
+
+</main>
 
 <?php get_footer(); ?>

@@ -10,15 +10,8 @@
   <div class="sa-ft-grid">
     <!-- Brand -->
     <div>
-      <?php
-      $logo_id = get_theme_mod('custom_logo');
-      if ($logo_id) {
-          echo wp_get_attachment_image($logo_id, 'full', false, array('class' => 'sa-ft-logo', 'alt' => get_bloginfo('name')));
-      } else {
-      ?>
-        <img src="https://i0.wp.com/saisonart.com/wp-content/uploads/2025/08/cropped-logo_siteweb-1.jpg?fit=1241%2C124&ssl=1"
-             alt="<?php echo esc_attr(get_bloginfo('name')); ?>" class="sa-ft-logo">
-      <?php } ?>
+      <img src="<?php echo esc_url(get_stylesheet_directory_uri() . '/assets/images/logo-saisonart-light.svg'); ?>"
+           alt="<?php echo esc_attr(get_bloginfo('name')); ?>" class="sa-ft-logo">
       <p class="sa-ft-tagline">&laquo;&nbsp;L'art original accessible — choisi, raconté, livré chez vous.&nbsp;&raquo;</p>
       <div class="sa-ft-social">
         <a href="#" aria-label="Instagram">
@@ -70,9 +63,9 @@
   <div class="sa-ft-bottom">
     <div class="sa-ft-copy">&copy; <?php echo date('Y'); ?> <span>SaisonArt</span> — L'art pour tous</div>
     <div class="sa-ft-legal">
-      <a href="<?php echo esc_url(home_url('/contact-us/')); ?>">Mentions légales</a>
-      <a href="<?php echo esc_url(home_url('/contact-us/')); ?>">CGV</a>
-      <a href="<?php echo esc_url(home_url('/contact-us/')); ?>">Confidentialité</a>
+      <a href="<?php echo esc_url(home_url('/mentions-legales/')); ?>">Mentions légales</a>
+      <a href="<?php echo esc_url(home_url('/conditions-generales-de-vente/')); ?>">CGV</a>
+      <a href="<?php echo esc_url(home_url('/politique-de-confidentialite/')); ?>">Confidentialité</a>
     </div>
   </div>
 </footer>

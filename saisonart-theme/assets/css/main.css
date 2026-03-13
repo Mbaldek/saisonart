@@ -3,7 +3,7 @@
    ============================================================ */
 
 /* ── 0. FONTS ─────────────────────────────────────────────── */
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500;600&display=swap');
+/* Google Fonts loaded via functions.php wp_enqueue_style — no @import needed */
 
 /* ── 1. DESIGN TOKENS ─────────────────────────────────────── */
 :root {
@@ -464,7 +464,30 @@ body.woocommerce-account {
   background-color: var(--sa-bg) !important;
 }
 
-/* Breadcrumb */
+/* Breadcrumbs */
+.sa-breadcrumbs {
+  max-width: var(--sa-max-w, 1200px);
+  margin: 0 auto;
+  padding: 14px var(--sa-px, 7%) 0;
+}
+.sa-bc-inner {
+  font-family: var(--sa-font-b) !important;
+  font-size: 12px;
+  color: var(--sa-muted);
+  letter-spacing: .02em;
+}
+.sa-bc-inner a {
+  color: var(--sa-text);
+  text-decoration: none;
+  transition: color .2s;
+}
+.sa-bc-inner a:hover {
+  color: var(--sa-accent);
+}
+.sa-bc-sep {
+  margin: 0 6px;
+  color: var(--sa-muted);
+}
 .woocommerce .woocommerce-breadcrumb {
   font-family: var(--sa-font-b) !important;
   font-size: 12px !important;
