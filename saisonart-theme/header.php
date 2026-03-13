@@ -17,6 +17,25 @@
 
 <div id="page" class="hfeed site">
 
+<!-- ═══════ ANNOUNCEMENT BAR ═══════ -->
+<?php
+$sa_s = sa_engage_get();
+if (!empty($sa_s['announce_enabled']) && $sa_s['announce_enabled'] !== '0') :
+    $sa_msgs = array_filter(array($sa_s['announce_msg_1'], $sa_s['announce_msg_2'], $sa_s['announce_msg_3']));
+    if (!empty($sa_msgs)) :
+?>
+<div class="sa-announce" style="--sa-announce-bg:<?php echo esc_attr($sa_s['announce_bg']); ?>">
+  <div class="sa-announce-track">
+    <?php foreach ($sa_msgs as $i => $msg) : ?>
+      <span class="sa-announce-text<?php echo $i === 0 ? ' is-active' : ''; ?>"><?php echo esc_html($msg); ?></span>
+    <?php endforeach; ?>
+  </div>
+  <button class="sa-announce-close" aria-label="Fermer">
+    <svg viewBox="0 0 24 24" width="14" height="14"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+  </button>
+</div>
+<?php endif; endif; ?>
+
 <!-- ═══════ HEADER ═══════ -->
 <header class="sa-header <?php echo is_front_page() ? 'sa-header--dark' : 'sa-header--light'; ?>" id="masthead">
   <a href="<?php echo esc_url(home_url('/')); ?>" class="sa-header-logo">

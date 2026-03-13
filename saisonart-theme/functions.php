@@ -4,6 +4,12 @@
  */
 
 /* --------------------------------------------------------------------------
+   Engagement admin
+   -------------------------------------------------------------------------- */
+require_once get_stylesheet_directory() . '/inc/engagement-admin.php';
+require_once get_stylesheet_directory() . '/inc/resend-handler.php';
+
+/* --------------------------------------------------------------------------
    Enqueue styles & scripts
    -------------------------------------------------------------------------- */
 add_action('wp_enqueue_scripts', 'saisonart_enqueue_styles', 20);
@@ -25,8 +31,20 @@ function saisonart_enqueue_styles() {
         wp_enqueue_style('saisonart-frontpage', get_stylesheet_directory_uri() . '/assets/css/front-page.css', array('saisonart-main'), $version);
     }
 
+    // Engagement styles
+    wp_enqueue_style('saisonart-engagement', get_stylesheet_directory_uri() . '/assets/css/engagement.css', array('saisonart-main'), $version);
+
     // JS
     wp_enqueue_script('saisonart-main', get_stylesheet_directory_uri() . '/assets/js/main.js', array('jquery'), $version, true);
+
+    // Engagement JS + config injection
+    wp_enqueue_script('saisonart-engagement', get_stylesheet_directory_uri() . '/assets/js/engagement.js', array('jquery'), $version, true);
+    $config = sa_engage_get();
+    // Add AJAX URL and nonce (remove sensitive keys from frontend)
+    $config['ajax_url'] = admin_url('admin-ajax.php');
+    $config['nonce']    = wp_create_nonce('sa_engage_nonce');
+    unset($config['resend_api_key'], $config['resend_from'], $config['resend_notify_email']);
+    wp_localize_script('saisonart-engagement', 'saEngageConfig', $config);
 }
 
 /* --------------------------------------------------------------------------
@@ -371,6 +389,51 @@ function saisonart_jsonld() {
 }
 
 /* --------------------------------------------------------------------------
+   SEO: Enriched alt text for product images
+   -------------------------------------------------------------------------- */
+add_filter('wp_get_attachment_image_attributes', 'saisonart_product_alt', 10, 3);
+function saisonart_product_alt($attr, $attachment, $size) {
+    if (!is_singular('product') && !(function_exists('is_shop') && is_shop())) {
+        return $attr;
+    }
+    $product_id = get_the_ID();
+    if (!$product_id || get_post_type($product_id) !== 'product') {
+        return $attr;
+    }
+    $product = wc_get_product($product_id);
+    if (!$product) {
+        return $attr;
+    }
+    $artist = $product->get_attribute('artiste') ?: $product->get_attribute('artist');
+    $alt = $product->get_name();
+    if ($artist) {
+        $alt .= ' par ' . $artist;
+    }
+    $alt .= ' — peinture originale';
+    $attr['alt'] = $alt;
+    return $attr;
+}
+
+/* --------------------------------------------------------------------------
+   SEO: Enable WebP upload support
+   -------------------------------------------------------------------------- */
+add_filter('upload_mimes', function ($mimes) {
+    $mimes['webp'] = 'image/webp';
+    return $mimes;
+});
+
+/* --------------------------------------------------------------------------
+   Performance: Defer main JS
+   -------------------------------------------------------------------------- */
+add_filter('script_loader_tag', 'saisonart_defer_js', 10, 3);
+function saisonart_defer_js($tag, $handle, $src) {
+    if ($handle === 'saisonart-main' || $handle === 'saisonart-engagement') {
+        return str_replace(' src', ' defer src', $tag);
+    }
+    return $tag;
+}
+
+/* --------------------------------------------------------------------------
    WooCommerce: product columns & per page
    -------------------------------------------------------------------------- */
 add_filter('loop_shop_columns', function () {
@@ -393,6 +456,48 @@ function saisonart_cart_fragment($fragments) {
         $fragments['.sa-header-cart-badge'] = '<span class="sa-header-cart-badge" style="display:none"></span>';
     }
     return $fragments;
+}
+
+/* --------------------------------------------------------------------------
+   SEO: Custom robots.txt
+   -------------------------------------------------------------------------- */
+add_filter('robots_txt', 'saisonart_robots_txt', 10, 2);
+function saisonart_robots_txt($output, $public) {
+    $output  = "User-agent: *\n";
+    $output .= "Allow: /\n";
+    $output .= "Disallow: /cart/\n";
+    $output .= "Disallow: /checkout/\n";
+    $output .= "Disallow: /my-account/\n";
+    $output .= "Disallow: /wp-admin/\n";
+    $output .= "Disallow: /*?add-to-cart=*\n";
+    $output .= "Disallow: /*?orderby=*\n\n";
+    $output .= "Sitemap: " . home_url('/wp-sitemap.xml') . "\n";
+    return $output;
+}
+
+/* --------------------------------------------------------------------------
+   SEO: Include products in WordPress native sitemap
+   -------------------------------------------------------------------------- */
+add_filter('wp_sitemaps_post_types', 'saisonart_sitemap_post_types');
+function saisonart_sitemap_post_types($post_types) {
+    if (post_type_exists('product')) {
+        $post_types['product'] = get_post_type_object('product');
+    }
+    return $post_types;
+}
+
+/* --------------------------------------------------------------------------
+   Engagement: heart button on WooCommerce product cards
+   -------------------------------------------------------------------------- */
+add_action('woocommerce_before_shop_loop_item_title', 'saisonart_heart_button', 15);
+function saisonart_heart_button() {
+    $s = sa_engage_get();
+    if (empty($s['hearts_enabled']) || $s['hearts_enabled'] === '0') return;
+    global $product;
+    if (!$product) return;
+    echo '<button class="sa-heart" data-product-id="' . esc_attr($product->get_id()) . '" aria-label="Ajouter aux favoris">'
+       . '<svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>'
+       . '</button>';
 }
 
 /* --------------------------------------------------------------------------

@@ -558,6 +558,7 @@ body.woocommerce-account {
 .woocommerce ul.products li.product a img {
   width: 100% !important;
   height: 260px !important;
+  aspect-ratio: 4/3;
   object-fit: cover !important;
   display: block !important;
   transition: transform .4s ease !important;

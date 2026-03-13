@@ -53,6 +53,11 @@ get_header(); ?>
 
 <!-- ═══════ 2. SÉLECTION DU MOMENT ═══════ -->
 <section class="sa-selection" id="selection">
+  <!-- Ambient orbs -->
+  <div class="sa-sel-orb sa-sel-orb--1"></div>
+  <div class="sa-sel-orb sa-sel-orb--2"></div>
+  <div class="sa-sel-orb sa-sel-orb--3"></div>
+
   <div class="sa-sel-header reveal">
     <div class="sa-sel-title-group">
       <div class="sa-sel-eyebrow">Coup de cœur</div>
@@ -102,6 +107,11 @@ get_header(); ?>
              loading="lazy" decoding="async">
         <div class="sa-card-overlay"></div>
         <div class="sa-card-hover-btn">Voir l'œuvre →</div>
+        <?php if (!empty(sa_engage_get('hearts_enabled')) && sa_engage_get('hearts_enabled') !== '0') : ?>
+          <button class="sa-heart" data-product-id="<?php echo esc_attr($product->get_id()); ?>" aria-label="Ajouter aux favoris">
+            <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+          </button>
+        <?php endif; ?>
       </div>
       <div class="sa-card-body">
         <?php if ($artist) : ?>
@@ -125,6 +135,23 @@ get_header(); ?>
       <div class="sa-sel-dot<?php echo $i === 0 ? ' active' : ''; ?>" data-index="<?php echo $i; ?>"></div>
     <?php endforeach; ?>
   </div>
+
+  <?php
+  $sa_sticky = sa_engage_get();
+  if (!empty($sa_sticky['sticky_enabled']) && $sa_sticky['sticky_enabled'] !== '0') :
+  ?>
+  <div class="sa-sticky-bar" id="saStickyBar">
+    <span class="sa-sticky-item"><?php echo esc_html($sa_sticky['sticky_arg_1']); ?></span>
+    <span class="sa-sticky-sep"></span>
+    <span class="sa-sticky-item"><?php echo esc_html($sa_sticky['sticky_arg_2']); ?></span>
+    <span class="sa-sticky-sep"></span>
+    <span class="sa-sticky-item"><?php echo esc_html($sa_sticky['sticky_arg_3']); ?></span>
+    <a href="<?php echo esc_url(home_url($sa_sticky['sticky_url'])); ?>" class="sa-sticky-cta">
+      <?php echo esc_html($sa_sticky['sticky_label']); ?>
+      <svg viewBox="0 0 24 24" width="14" height="14" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+    </a>
+  </div>
+  <?php endif; ?>
 </section>
 
 <!-- ═══════ 3. POURQUOI SAISONART ═══════ -->
