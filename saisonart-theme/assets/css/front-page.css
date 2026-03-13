@@ -255,8 +255,8 @@ body.home button:focus-visible {
   pointer-events: auto;
 }
 .sa-hero-burger:hover {
-  background: rgba(255,255,255,.22);
-  border-color: rgba(255,255,255,.4);
+  background: rgba(255,255,255,.18);
+  border-color: rgba(139,94,60,.4);
 }
 .sa-hero-burger span {
   display: block;
@@ -270,33 +270,86 @@ body.home button:focus-visible {
 .sa-hero-burger.is-open span:nth-child(2) { opacity: 0; }
 .sa-hero-burger.is-open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
 
+/* Menu dropdown — frosted glass + gold accents */
 .sa-hero-menu {
-  display: none;
+  position: absolute;
+  top: 24px;
+  left: 24px;
+  display: flex;
   flex-direction: column;
-  margin-top: 10px;
-  background: rgba(13,22,16,.92);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border: 1px solid rgba(255,255,255,.1);
-  border-radius: 12px;
-  padding: 10px 0;
-  min-width: 160px;
-  box-shadow: 0 12px 40px rgba(0,0,0,.4);
+  min-width: 180px;
+  padding: 14px 0;
+  background: rgba(255,255,255,.12);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255,255,255,.18);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0,0,0,.25);
+  transform-origin: top left;
+  transform: scaleY(0) scaleX(0.85);
+  opacity: 0;
+  pointer-events: none;
+  transition: transform .3s cubic-bezier(.22,1,.36,1), opacity .25s ease;
 }
-.sa-hero-menu.is-open { display: flex; }
+.sa-hero-menu.is-open {
+  transform: scaleY(1) scaleX(1);
+  opacity: 1;
+  pointer-events: auto;
+}
 
+/* Gold bottom edge */
+.sa-hero-menu::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 10%;
+  right: 10%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--sa-accent), transparent);
+  opacity: .4;
+  border-radius: 1px;
+}
+
+/* Links — staggered cascade */
 .sa-hero-menu a {
   display: block;
-  padding: 10px 20px;
-  font-size: 13px;
+  padding: 10px 22px;
+  font-size: 14px;
   font-weight: 500;
-  color: rgba(255,255,255,.6);
+  color: rgba(255,255,255,.75);
   text-decoration: none;
-  transition: color .15s, background .15s;
+  position: relative;
+  transition: color .2s, transform .25s cubic-bezier(.22,1,.36,1), opacity .2s;
+  transform: translateY(-8px);
+  opacity: 0;
+}
+.sa-hero-menu.is-open a {
+  transform: translateY(0);
+  opacity: 1;
+}
+.sa-hero-menu.is-open a:nth-child(1) { transition-delay: .05s; }
+.sa-hero-menu.is-open a:nth-child(2) { transition-delay: .1s; }
+.sa-hero-menu.is-open a:nth-child(3) { transition-delay: .12s; }
+.sa-hero-menu.is-open a:nth-child(4) { transition-delay: .15s; }
+
+/* Gold hover underline */
+.sa-hero-menu a::after {
+  content: '';
+  position: absolute;
+  bottom: 4px;
+  left: 22px;
+  right: 22px;
+  height: 1px;
+  background: var(--sa-accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform .25s ease;
 }
 .sa-hero-menu a:hover {
-  color: #fff;
-  background: rgba(255,255,255,.06);
+  color: var(--sa-accent2);
+}
+.sa-hero-menu a:hover::after {
+  transform: scaleX(1);
 }
 
 /* Hero responsive */
