@@ -52,7 +52,7 @@ html { scroll-behavior: smooth; }
 body {
   font-family: var(--sa-font-b) !important;
   color: var(--sa-text) !important;
-  background-color: var(--sa-darkest) !important;
+  background-color: var(--sa-bg) !important;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -68,12 +68,6 @@ body {
   padding: 0 !important;
   margin: 0 auto !important;
   max-width: none !important;
-}
-
-/* Force body background on homepage */
-body.home,
-body.home #page {
-  background: var(--sa-darkest) !important;
 }
 
 h1, h2, h3, h4, h5, h6,
