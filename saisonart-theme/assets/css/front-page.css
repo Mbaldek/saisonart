@@ -233,7 +233,8 @@ body.home button:focus-visible {
   position: absolute;
   top: 24px;
   left: 24px;
-  z-index: 10;
+  z-index: 20;
+  pointer-events: auto;
 }
 
 .sa-hero-burger {
@@ -242,19 +243,20 @@ body.home button:focus-visible {
   justify-content: center;
   align-items: center;
   gap: 5px;
-  width: 44px;
-  height: 44px;
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
-  border: 1px solid rgba(255,255,255,.15);
-  background: rgba(255,255,255,.08);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  border: 1.5px solid rgba(255,255,255,.25);
+  background: rgba(255,255,255,.12);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   cursor: pointer;
   transition: background .2s, border-color .2s;
+  pointer-events: auto;
 }
 .sa-hero-burger:hover {
-  background: rgba(255,255,255,.14);
-  border-color: rgba(255,255,255,.25);
+  background: rgba(255,255,255,.22);
+  border-color: rgba(255,255,255,.4);
 }
 .sa-hero-burger span {
   display: block;
@@ -446,8 +448,8 @@ body.home button:focus-visible {
 /* Stack carousel */
 .sa-stack {
   position: relative;
-  height: 420px;
-  perspective: 1200px;
+  height: 520px;
+  perspective: 1600px;
 }
 
 .sa-card {
@@ -459,9 +461,10 @@ body.home button:focus-visible {
   border: 1px solid var(--sa-border2);
   box-shadow: 0 20px 60px rgba(0, 0, 0, .4);
   cursor: pointer;
-  transition: all .5s cubic-bezier(.22, 1, .36, 1), filter .4s ease;
+  transition: all .6s cubic-bezier(.22, 1, .36, 1);
   transform-origin: bottom center;
   user-select: none;
+  will-change: transform, opacity, filter;
 }
 
 .sa-card-img {
