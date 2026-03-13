@@ -3,10 +3,50 @@
  * SaisonArt Child Theme functions.
  */
 
-add_action('wp_enqueue_scripts', 'saisonart_enqueue_styles');
+/* --------------------------------------------------------------------------
+   Enqueue styles & scripts
+   -------------------------------------------------------------------------- */
+add_action('wp_enqueue_scripts', 'saisonart_enqueue_styles', 20);
 function saisonart_enqueue_styles() {
+    $version = wp_get_theme()->get('Version');
+
+    // Parent theme
     wp_enqueue_style('storefront-style', get_template_directory_uri() . '/style.css');
-    wp_enqueue_style('saisonart-style', get_stylesheet_uri(), array('storefront-style'), wp_get_theme()->get('Version'));
-    wp_enqueue_style('saisonart-main', get_stylesheet_directory_uri() . '/assets/css/main.css', array('saisonart-style'), wp_get_theme()->get('Version'));
-    wp_enqueue_script('saisonart-main', get_stylesheet_directory_uri() . '/assets/js/main.js', array('jquery'), wp_get_theme()->get('Version'), true);
+
+    // Child theme
+    wp_enqueue_style('saisonart-style', get_stylesheet_uri(), array('storefront-style'), $version);
+    wp_enqueue_style('saisonart-main', get_stylesheet_directory_uri() . '/assets/css/main.css', array('saisonart-style'), $version);
+
+    // JS
+    wp_enqueue_script('saisonart-main', get_stylesheet_directory_uri() . '/assets/js/main.js', array('jquery'), $version, true);
+}
+
+/* --------------------------------------------------------------------------
+   Theme setup
+   -------------------------------------------------------------------------- */
+add_action('after_setup_theme', 'saisonart_setup');
+function saisonart_setup() {
+    add_theme_support('woocommerce');
+    add_theme_support('wc-product-gallery-zoom');
+    add_theme_support('wc-product-gallery-lightbox');
+    add_theme_support('wc-product-gallery-slider');
+}
+
+/* --------------------------------------------------------------------------
+   WooCommerce: product columns & per page
+   -------------------------------------------------------------------------- */
+add_filter('loop_shop_columns', function () {
+    return 3;
+});
+
+add_filter('loop_shop_per_page', function () {
+    return 12;
+});
+
+/* --------------------------------------------------------------------------
+   Remove default Storefront search in header
+   -------------------------------------------------------------------------- */
+add_action('init', 'saisonart_remove_storefront_actions');
+function saisonart_remove_storefront_actions() {
+    remove_action('storefront_header', 'storefront_product_search', 25);
 }
